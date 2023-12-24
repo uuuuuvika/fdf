@@ -1,32 +1,34 @@
-SRCS	= fdf.c
-
-OBJS	:= $(SRCS:%.c=%.o)
-
 NAME	= fdf
 
-CC		= cc -g
+CC		= gcc
 RM		= rm -f
+CFLAGS 	= -g -Wall -Wextra -Werror #-fsanitize=address
 
-CFLAGS 	= -Wall -Wextra -Werror #-fsanitize=address
+MINILIBX_DIR	:= minilibx_macos/
+MINILIBX		:= $(MINILIBX_DIR)libmlx.a
+MINILIBXCC		:= -I mlx -L $(MINILIBX_DIR) -lmlx
+HEADER 			:= -I$(MINILIBX_DIR)
+OPENGL			:= -framework OpenGL -framework AppKit
 
-all:		${NAME}
 
-%.o: %.c
-	$(CC) -Wall -Wextra -Werror -Imlx -c $< -o $@
+SRC	=	fdff.c
+OBJ	=	$(SRC:%.c=%.o)
 
-$(NAME): $(OBJ)
+OBJF		=	.cache_exists
 
-	@make -C mlx
-	$(CC) $(OBJ) -Lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+all:	makelibs
+		@$(MAKE) $(NAME)
 
-minilibx:
-		make -C mlx
+makelibs:
+	@$(MAKE) -C $(MINILIBX_DIR)
 
-clean:
-			make clean -C mlx
-			${RM} ${OBJS}
+$(NAME):	$(OBJ)		
+			@$(CC) $(CFLAGS) $(OBJ) $(MINILIBXCC) $(OPENGL) -o $(NAME)		
+			@echo "👉 $(CC) $(CFLAGS) $(OBJ) $(MINILIBXCC) $(OPENGL) -o $(NAME)"
+			@echo "✨ FDF compiled!"
 
-fclean:		clean
-			${RM} ${NAME}
+$(MINILIBX):
+	@make -C $(MINILIBX_DIR)
+	@echo "$(GREEN)Minilibx compiled!$(DEF_COLOR)"	
 
-re:			fclean all
+.PHONY:		all clean fclean re
