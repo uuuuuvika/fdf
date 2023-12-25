@@ -31,4 +31,18 @@ $(MINILIBX):
 	@make -C $(MINILIBX_DIR)
 	@echo "$(GREEN)Minilibx compiled!$(DEF_COLOR)"	
 
+clean:
+			@make clean -C $(MINILIBX_DIR)
+			$(RM) -rf $(OBJ)
+
+fclean:		clean
+			$(RM) -f $(NAME)
+			$(RM) -f $(MINILIBX_DIR)libmlx.a		
+
+re:			fclean 
+			@$(MAKE)
+
+norm:
+			@norminette $(SRC) $(INCLUDE) | grep -v Norme -B1 || true
+
 .PHONY:		all clean fclean re
