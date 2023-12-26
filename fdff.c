@@ -2,11 +2,14 @@
 #include <stdlib.h>
 #include "minilibx_macos/mlx.h"
 
-int main(void)
-{
-    void	*mlx_ptr;
+// # define WINDOW_WIDTH 600
+// # define WINDOW_HEIGHT 300
 
-    mlx_ptr = mlx_init();
-    
-    free(mlx_ptr);
+
+
+int main()
+{
+    void *mlx = mlx_init();
+    void *win = mlx_new_window(mlx, 640, 360, "Tutorial Window");
+    mlx_loop(mlx);
 }
