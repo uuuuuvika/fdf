@@ -7,10 +7,10 @@ CFLAGS 	= -g -Wall -Wextra  -fsanitize=address #-Werror
 MINILIBX_DIR	:= minilibx_macos/
 MINILIBX		:= $(MINILIBX_DIR)libmlx.a
 MINILIBXCC		:= -I mlx -L $(MINILIBX_DIR) -lmlx
-HEADER 			:= -I$(MINILIBX_DIR)
+# HEADER 			:= -I$(MINILIBX_DIR)
 OPENGL			:= -framework OpenGL -framework AppKit
 
-SRC	=	fdff.c
+SRC	=	fdf.c
 OBJ	=	$(SRC:%.c=%.o)
 
 all:	makelibs
