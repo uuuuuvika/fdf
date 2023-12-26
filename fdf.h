@@ -6,12 +6,13 @@
 # include <X11/keysym.h>
 # include "minilibx_macos/mlx.h"
 
-#define WINDOW_WIDTH 600
-#define WINDOW_HEIGHT 300
+#define WIDTH 600
+#define HEIGHT 300
 
 #define MLX_ERROR 1
 
 #define RED_PIXEL 0xFF0000
+#define GRN_PIXEL 0x00FF00 
 
 typedef struct s_data
 {
