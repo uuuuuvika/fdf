@@ -11,28 +11,33 @@
 #define WIDTH 800
 #define HEIGHT 600
 
-
-
-const double RED_COEFFICIENT = 0.2126;
-const double GREEN_COEFFICIENT = 0.7152;
-const double BLUE_COEFFICIENT = 0.0722;
-const int DARK_THRESHOLD = 128;
+#define RED_COEFFICIENT 0.2126;
+#define GREEN_COEFFICIENT 0.7152;
+#define BLUE_COEFFICIENT 0.0722;
+#define DARK_THRESHOLD 128;
 
 
 #define MLX_ERROR 1
+#define KEY_ESC 53
 
-
-typedef struct
+typedef struct s_color
 {
     int r;
     int g;
     int b;
-} Color;
+} t_color;
 
 typedef struct s_data
 {
     void	*mlx_ptr;
     void	*win_ptr;
 }	t_data;
+
+t_color gradientColors[2];
+
+int handle_keypress(int key, t_data *data);
+
+int isDarkColor(t_color color);
+void generateGradientPalette();
 
 #endif

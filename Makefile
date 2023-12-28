@@ -10,7 +10,7 @@ MINILIBXCC		:= -I mlx -L $(MINILIBX_DIR) -lmlx
 # HEADER 			:= -I$(MINILIBX_DIR)
 OPENGL			:= -framework OpenGL -framework AppKit
 
-SRC	=	fdf.c
+SRC	=	fdf.c utils_colors.c keypress_handling.c
 OBJ	=	$(SRC:%.c=%.o)
 
 all:	makelibs
