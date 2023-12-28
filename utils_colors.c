@@ -1,21 +1,21 @@
 #include "fdf.h"
 
-int isDarkColor(t_color color)
+int is_dark(t_color color)
 {
 	int brightness = color.r * RED_COEFFICIENT + color.g * GREEN_COEFFICIENT + color.b * BLUE_COEFFICIENT;
 	return brightness < DARK_THRESHOLD;
 }
 
-void generateGradientPalette()
+void gen_gradient()
 {
     do
     {
-        gradientColors[0].r = rand() % 256;
-        gradientColors[0].g = rand() % 256;
-        gradientColors[0].b = rand() % 256;
+        gradients[0].r = rand() % 256;
+        gradients[0].g = rand() % 256;
+        gradients[0].b = rand() % 256;
 
-        gradientColors[1].r = rand() % 256;
-        gradientColors[1].g = rand() % 256;
-        gradientColors[1].b = rand() % 256;
-    } while (isDarkColor(gradientColors[0]) || isDarkColor(gradientColors[1]));
+        gradients[1].r = rand() % 256;
+        gradients[1].g = rand() % 256;
+        gradients[1].b = rand() % 256;
+    } while (is_dark(gradients[0]) || is_dark(gradients[1]));
 }

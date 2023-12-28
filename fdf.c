@@ -45,7 +45,7 @@ int main(void)
 		return (MLX_ERROR);
 	}
 
-	//generateGradientPalette();
+	//gen_gradient();
 
 	mlx_loop_hook(data.mlx_ptr, &draw_square, &data);
 	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, &handle_keypress, &data);
