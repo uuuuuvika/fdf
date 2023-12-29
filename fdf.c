@@ -26,6 +26,35 @@ int draw_square(t_data *data)
 	return (0);
 }
 
+int render_rect(t_img *img, t_rect rect)
+{
+    int	i;
+    int j;
+
+    i = rect.y;
+    while (i < rect.y + rect.height)
+    {
+        j = rect.x;
+        while (j < rect.x + rect.width)
+            img_pix_put(img, j++, i, rect.color);
+        ++i;
+    }
+    return (0);
+}
+
+int	render(t_data *data)
+{
+    if (data->win_ptr == NULL)
+        return (1);
+    render_rect(&data->img, (t_rect){WIDTH - 100, HEIGHT - 100,
+        100, 100, GREEN_PIXEL});
+    //render_rect(&data->img, (t_rect){0, 0, 500, 300, RED_PIXEL});
+
+    mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
+
+    return (0);
+}
+
 int main(void)
 {
 	srand(time(NULL));
@@ -49,7 +78,7 @@ int main(void)
 	data.img.mlx_img = mlx_new_image(data.mlx_ptr, WIDTH, HEIGHT);
 	data.img.addr = mlx_get_data_addr(data.img.mlx_img, &data.img.bpp, &data.img.line_len, &data.img.endian);
 
-	mlx_loop_hook(data.mlx_ptr, &draw_square, &data);
+	mlx_loop_hook(data.mlx_ptr, &render, &data);
 	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, &handle_keypress, &data);
 	mlx_loop(data.mlx_ptr);
 

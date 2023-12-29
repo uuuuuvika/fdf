@@ -15,6 +15,8 @@
 #define BLUE_COEFFICIENT 0.0722;
 #define DARK_THRESHOLD 128;
 
+#define GREEN_PIXEL 0xFF00
+
 #define MLX_ERROR 1
 #define KEY_ESC 53
 
@@ -41,6 +43,14 @@ typedef struct s_data
     t_img	img;
 }	t_data;
 
+typedef struct s_rect
+{
+	int	x;
+	int	y;
+	int width;
+	int height;
+	int color;
+}	t_rect;
 
 t_color gradients[2];
 
@@ -50,5 +60,7 @@ int handle_keypress(int key, t_data *data);
 
 int is_dark(t_color color);
 void gen_gradient();
+
+void	img_pix_put(t_img *img, int x, int y, int color);
 
 #endif
