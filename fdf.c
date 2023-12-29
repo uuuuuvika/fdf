@@ -2,7 +2,7 @@
 
 int draw_square(t_data *data)
 {
-	int side_length = 100;
+	int side_length = 300;
 	int x = WIDTH / 2 - side_length / 2;
 	int y = HEIGHT / 2 - side_length / 2;
 
@@ -46,10 +46,12 @@ int main(void)
 	}
 
 	//gen_gradient();
+	data.img.mlx_img = mlx_new_image(data.mlx_ptr, WIDTH, HEIGHT);
+	data.img.addr = mlx_get_data_addr(data.img.mlx_img, &data.img.bpp, &data.img.line_len, &data.img.endian);
 
 	mlx_loop_hook(data.mlx_ptr, &draw_square, &data);
 	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, &handle_keypress, &data);
 	mlx_loop(data.mlx_ptr);
 
-	return 0;
+	return (0);
 }

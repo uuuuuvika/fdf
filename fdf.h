@@ -25,11 +25,22 @@ typedef struct s_color
     int b;
 } t_color;
 
+typedef struct s_img
+{
+    void	*mlx_img;
+    char	*addr;
+    int		bpp; /* bits per pixel */
+    int		line_len;
+    int		endian;
+}	t_img;
+
 typedef struct s_data
 {
     void	*mlx_ptr;
     void	*win_ptr;
+    t_img	img;
 }	t_data;
+
 
 t_color gradients[2];
 
