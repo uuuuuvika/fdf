@@ -43,15 +43,6 @@ typedef struct s_data
     t_img	img;
 }	t_data;
 
-typedef struct s_rect
-{
-	int	x;
-	int	y;
-	int width;
-	int height;
-	int color;
-}	t_rect;
-
 t_color gradients[2];
 
 
