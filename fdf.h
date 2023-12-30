@@ -10,10 +10,10 @@
 #define WIDTH 800
 #define HEIGHT 800
 
-#define RED_COEFFICIENT 0.2126;
-#define GREEN_COEFFICIENT 0.7152;
-#define BLUE_COEFFICIENT 0.0722;
-#define DARK_THRESHOLD 128;
+#define RED_COEFFICIENT 0.2126
+#define GREEN_COEFFICIENT 0.7152
+#define BLUE_COEFFICIENT 0.0722
+#define DARK_THRESHOLD 128
 
 #define GREEN_PIXEL 0xFF00
 
@@ -34,6 +34,7 @@ typedef struct s_img
     int		bpp; /* bits per pixel */
     int		line_len;
     int		endian;
+    t_color *gradient;
 }	t_img;
 
 typedef struct s_data
@@ -43,14 +44,12 @@ typedef struct s_data
     t_img	img;
 }	t_data;
 
-t_color gradients[2];
-
 
 //functions 
 int handle_keypress(int key, t_data *data);
 
 int is_dark(t_color color);
-void gen_gradient();
+t_color *gen_gradient(void);
 
 void	img_pix_put(t_img *img, int x, int y, int color);
 
