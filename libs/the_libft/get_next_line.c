@@ -1,5 +1,42 @@
 #include "libft.h"
 
+static size_t ft_spec_strlen(char *str)
+{
+	int i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i])
+		i++;
+	return (i);
+}
+
+static char *ft_spec_strjoin(char *str1, char *str2)
+{
+	int i;
+	char *newstr;
+
+	i = 0;
+	newstr = malloc(ft_spec_strlen(str1) + ft_spec_strlen(str2) + 1);
+	if (!newstr)
+		return (NULL);
+	while (str1 && str1[i])
+	{
+		newstr[i] = str1[i];
+		i++;
+	}
+	free(str1);
+	while (*str2)
+	{
+		newstr[i++] = *str2;
+		if (*str2++ == '\n')
+			break;
+	}
+	newstr[i] = '\0';
+	return (newstr);
+}
+
 static int shift_buff(char *buff)
 {
 	int old_index;
@@ -33,7 +70,7 @@ char *get_next_line(int fd)
 	}
 	while (*buff != '\0' || read(fd, buff, BUFFER_SIZE) > 0)
 	{
-		line = ft_strjoin(line, buff);
+		line = ft_spec_strjoin(line, buff);
 		if (shift_buff(buff))
 			break;
 	}

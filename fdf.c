@@ -134,8 +134,7 @@ int main(void)
 	data.img.addr = mlx_get_data_addr(data.img.mlx_img, &data.img.bpp, &data.img.line_len, &data.img.endian);
 	data.img.gradient = gradient;
 
-	fd = open("maps/test.txt", O_RDONLY);
-	//printf("Fd: %d\n", fd);
+	fd = open("maps/julia.fdf", O_RDONLY);
 	
 	read_map(fd);
 	//close(fd);
