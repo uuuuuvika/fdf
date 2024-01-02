@@ -1,11 +1,12 @@
 #ifndef FDF_H
-# define FDF_H
-# include <math.h>
-# include <stdlib.h>
-# include <time.h>
-# include <X11/X.h>
-# include <X11/keysym.h>
-# include "minilibx_macos/mlx.h"
+#define FDF_H
+#include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
+#include <X11/X.h>
+#include <X11/keysym.h>
+#include "libs/minilibx_macos/mlx.h"
 
 #define WIDTH 800
 #define HEIGHT 800
@@ -29,28 +30,36 @@ typedef struct s_color
 
 typedef struct s_img
 {
-    void	*mlx_img;
-    char	*addr;
-    int		bpp; /* bits per pixel */
-    int		line_len;
-    int		endian;
+    void *mlx_img;
+    char *addr;
+    int bpp; /* bits per pixel */
+    int line_len;
+    int endian;
     t_color *gradient;
-}	t_img;
+} t_img;
 
 typedef struct s_data
 {
-    void	*mlx_ptr;
-    void	*win_ptr;
-    t_img	img;
-}	t_data;
+    void *mlx_ptr;
+    void *win_ptr;
+    t_img img;
+} t_data;
 
+typedef struct s_cart {
+    double x, y, z;
+} t_cart;
 
-//functions 
+typedef struct s_iso{
+    double iso_x, iso_y;
+} t_iso;
+
+// functions
 int handle_keypress(int key, t_data *data);
 
 int is_dark(t_color color);
 t_color *gen_gradient(void);
+void print_gradient(t_color *gradient);
 
-void	img_pix_put(t_img *img, int x, int y, int color);
+void img_pix_put(t_img *img, int x, int y, int color);
 
 #endif

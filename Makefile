@@ -4,18 +4,20 @@ CC		= gcc
 RM		= rm -f
 CFLAGS 	= -g -Wall -Wextra  -fsanitize=address #-Werror
 
-MINILIBX_DIR	:= minilibx_macos/
+LIBFT			:= libs/the_libft/
+MINILIBX_DIR	:= libs/minilibx_macos/
 MINILIBXCC		:= -I mlx -L $(MINILIBX_DIR) -lmlx
 OPENGL			:= -framework OpenGL -framework AppKit
 
 SRC	=	fdf.c	utils_colors.c	keypress_handling.c	utils_image.c
 OBJ	=	$(SRC:%.c=%.o)
 
-all:	makelibx
+all:	makelibs
 		@$(MAKE) $(NAME)
 
-makelibx:
+makelibs:
 	@$(MAKE) -C $(MINILIBX_DIR)
+	@$(MAKE) -C $(LIBFT)
 
 $(NAME):	$(OBJ)		
 			@$(CC) $(CFLAGS) $(OBJ) $(MINILIBXCC) $(OPENGL) -o $(NAME)		
@@ -23,8 +25,10 @@ $(NAME):	$(OBJ)
 $(MINILIBX):
 	@make -C $(MINILIBX_DIR)
 
+
 clean:
 			@make clean -C $(MINILIBX_DIR)
+			@make clean -C $(LIBFT)
 			$(RM) -rf $(OBJ)
 
 fclean:		clean

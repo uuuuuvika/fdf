@@ -32,3 +32,16 @@ t_color *gen_gradient(void)
 
     return gradients;
 }
+
+void print_gradient(t_color *gradient)
+{
+	if (gradient != NULL)
+	{
+		printf("Gradient 0: R - %d, G - %d, B - %d\n", gradient[0].r, gradient[0].g, gradient[0].b);
+		printf("Gradient 1: R - %d, G - %d, B - %d\n", gradient[1].r, gradient[1].g, gradient[1].b);
+	}
+	else
+	{
+		printf("Failed to generate gradient.\n");
+	}
+}
