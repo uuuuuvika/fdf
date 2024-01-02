@@ -6,7 +6,14 @@
 #include <time.h>
 #include <X11/X.h>
 #include <X11/keysym.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+# include <limits.h>
 #include "libs/minilibx_macos/mlx.h"
+#include "libs/the_libft/libft.h"
 
 #define WIDTH 800
 #define HEIGHT 800
@@ -15,6 +22,7 @@
 #define GREEN_COEFFICIENT 0.7152
 #define BLUE_COEFFICIENT 0.0722
 #define DARK_THRESHOLD 128
+# define BUFFER_SIZE 1024
 
 #define GREEN_PIXEL 0xFF00
 
@@ -61,5 +69,7 @@ t_color *gen_gradient(void);
 void print_gradient(t_color *gradient);
 
 void img_pix_put(t_img *img, int x, int y, int color);
+
+void read_map(int fd);
 
 #endif

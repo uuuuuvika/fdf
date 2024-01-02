@@ -113,6 +113,7 @@ int main(void)
 
 
 	t_data data;
+	int fd;
 
 	t_color *gradient = gen_gradient();
 	if (gradient == NULL)
@@ -133,7 +134,13 @@ int main(void)
 	data.img.addr = mlx_get_data_addr(data.img.mlx_img, &data.img.bpp, &data.img.line_len, &data.img.endian);
 	data.img.gradient = gradient;
 
-	// print_gradient(data.img.gradient);
+	fd = open("maps/test.txt", O_RDONLY);
+	//printf("Fd: %d\n", fd);
+	
+	read_map(fd);
+	//close(fd);
+
+	print_gradient(data.img.gradient);
 
 	// printf("Cartesian Coordinates: %.lf, %.lf, %.lf\n",
 	// 	   c_c.x, c_c.y, c_c.z);
