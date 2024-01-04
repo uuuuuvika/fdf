@@ -61,20 +61,28 @@ void read_map(int fd, t_map *map)
 			max_num_cols = len;
 	}
 	close(fd);
-
+	// allocate memory for the map
+	map->values = malloc(sizeof(int *) * num_rows);
 	// then read the map
 	fd = open("maps/plat.fdf", O_RDONLY);
 	int i = 0;
+	while (i < num_rows)
+	{
+		map->values[i] = malloc(sizeof(int) * max_num_cols);
+		i++;
+	}
+	i = 0;
 	while (i < num_rows)
 	{
 		line = get_next_line(fd);
 		// TODO: add check if the line is == or < than max_num_cols
 
 		values = ft_split(line, ' ');
+
 		num_values = 0;
-		while(values[num_values] != NULL)
+		while(values[num_values] != NULL && values[num_values][0] != '\n')
 		{
-			map->values[i][num_values] = values[num_values];
+			map->values[i][num_values] = ft_atoi(values[num_values]);
 			num_values++;
 		}
 		i++;
@@ -103,9 +111,9 @@ void read_map(int fd, t_map *map)
 	// 	// 	exit(1);
 	// 	// }
 	// }
-	int i = 0;
-	while (values[i] != NULL)
-		free(values[i++]);
+	int j = 0;
+	while (values[j] != NULL)
+		free(values[j++]);
 	free(values);
 
 	map->num_rows = num_rows;
