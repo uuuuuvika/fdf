@@ -36,14 +36,22 @@ typedef struct s_color
     int b;
 } t_color;
 
+typedef struct s_map
+{
+    int num_rows;
+    int max_num_cols;
+    char **values;
+} t_map;
+
 typedef struct s_img
 {
     void *mlx_img;
     char *addr;
-    int bpp; /* bits per pixel */
-    int line_len;
+    int bpp;
+    int line_len; //???
     int endian;
     t_color *gradient;
+    t_map map;
 } t_img;
 
 typedef struct s_data
@@ -70,6 +78,6 @@ void print_gradient(t_color *gradient);
 
 void img_pix_put(t_img *img, int x, int y, int color);
 
-void read_map(int fd);
+void read_map(int fd, t_map *map);
 
 #endif
