@@ -2,7 +2,7 @@ NAME	= fdf
 
 CC		= gcc
 RM		= rm -f
-CFLAGS 	= -g -Wall -Wextra  -fsanitize=address #-Werror
+CFLAGS 	= -g -Wall -Wextra  #-fsanitize=address #-Werror
 
 LIBFT			= libs/the_libft/libft.a
 MINILIBX_DIR	:= libs/minilibx_macos/

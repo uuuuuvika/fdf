@@ -1,8 +1,6 @@
 #ifndef FDF_H
 #define FDF_H
 #include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <time.h>
 #include <X11/X.h>
 #include <X11/keysym.h>
@@ -28,6 +26,12 @@
 
 #define MLX_ERROR 1
 #define KEY_ESC 53
+#define KEY_UP 126
+#define KEY_DOWN 125
+#define KEY_LEFT 123
+#define KEY_RIGHT 124
+#define KEY_W 13
+#define KEY_S 1
 
 typedef struct s_color
 {
@@ -41,6 +45,8 @@ typedef struct s_map
     int num_rows;
     int max_num_cols;
     char **values;
+    double a_z;
+    double a_x;
 } t_map;
 
 typedef struct s_img
@@ -51,7 +57,7 @@ typedef struct s_img
     int line_len; //???
     int endian;
     t_color *gradient;
-    t_map map;
+    // t_map map;
 } t_img;
 
 typedef struct s_data
@@ -59,15 +65,16 @@ typedef struct s_data
     void *mlx_ptr;
     void *win_ptr;
     t_img img;
+    t_map map;
 } t_data;
 
-typedef struct s_cart {
-    double x, y, z;
-} t_cart;
+// typedef struct s_cart {
+//     double x, y, z;
+// } t_cart;
 
-typedef struct s_iso{
-    double iso_x, iso_y;
-} t_iso;
+// typedef struct s_iso{
+//     double iso_x, iso_y;
+// } t_iso;
 
 // functions
 int handle_keypress(int key, t_data *data);

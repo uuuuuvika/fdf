@@ -43,44 +43,36 @@ int draw_square(t_img *img)
 	return (0);
 }
 
-int draw_dots(t_img *img, char **values, int rows, int columns)
+int draw_dots(t_img *img, char **values, int rows, int columns, double a_x, double a_z)
 {
 	double x;
 	double y;
 	int z;
-	double offset;
-	double a;
+	//double offset;
+	//double a;
 	double scale;
+	double x_rotated, z_rotated;
 
-	a = 30.0 / 180 * 3.14159;
-	scale = 15;
+	//a = 30.0 / 180 * 3.14159;
+	scale = 10.0;
 	x = 0;
-	double x45;
-	double y45;
-	offset = 300;
-
 	while (x < rows)
 	{
 		y = 0;
 		while (y < columns)
 		{
 			z = values[(int)x][(int)y];
-			(void)z;
+			//double x_offset = columns / 2;
+			//double y_offset = rows / 2;
 
-			// x45 = -(x*cos(a) - y *sin(a));
-			// y45 = (x*sin(a) + y*cos(a));
-			// y45 = (y45 * cos(a) - z * sin(a));
-			// x45 = -(x * cos(a) - y * sin(a));
-			// y45 = x * sin(a) + y * cos(a) * cos(a) - z * sin(a);
-			x45 = x * cos(a) - y * cos(a);
-			//y45 = x * sin(a) + y * cos(a) * cos(a) - 3.00 * sin(a);
-			y45 = sin(a) * (x - y * sin(a) - 3.00) + y;
+			x_rotated = x * cos(a_z) - y * sin(a_z);
+			z_rotated = (x * sin(a_z) + (y) * cos(a_z)) * cos(a_x) - z * sin(a_x);
+	
+            x_rotated *= scale;
+            z_rotated *= scale;
 
-			x45 *= scale;
-			y45 *= scale;
-
-			// printf("x=%f, x45=%f, y=%f, y45=%f\n", x, x45, y, y45);
-			img_pix_put(img, x45 + offset, y45 + offset, GREEN_PIXEL);
+			//printf("x=%f, x45=%f, y=%f, y45=%f\n", x, x45, y, y45);
+			img_pix_put(img, x_rotated + WIDTH/2, z_rotated + HEIGHT/2, GREEN_PIXEL);
 			y++;
 		}
 		x++;
@@ -93,14 +85,25 @@ int render(t_data *data)
 		return (1);
 	// draw_square(&data->img);
 
-	draw_dots(&data->img, data->img.map.values, data->img.map.num_rows, data->img.map.max_num_cols);
+	static double last_a_z = 0;
+	static double last_a_x = 0;
+	if (last_a_z != data->map.a_z || last_a_x != data->map.a_x)
+	{
+		// mlx_destroy_image(data->mlx_ptr, data->img.mlx_img);
+		// data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIDTH, HEIGHT);
+	}
+
+	draw_dots(&data->img, data->map.values, data->map.num_rows, data->map.max_num_cols, data->map.a_x, data->map.a_z);
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
+	
+	last_a_z = data->map.a_z;
+	last_a_x = data->map.a_x;
 	return (0);
 }
 
 int main(void)
 {
-	t_data data;
+	static t_data data;
 	int fd;
 
 	t_color *gradient = gen_gradient();
@@ -123,16 +126,19 @@ int main(void)
 	data.img.addr = mlx_get_data_addr(data.img.mlx_img, &data.img.bpp, &data.img.line_len, &data.img.endian);
 	data.img.gradient = gradient;
 
-	fd = open("maps/plat.fdf", O_RDONLY);
+	fd = open("maps/elem.fdf", O_RDONLY); //pylone has uneven columns ???
 
-	read_map(fd, &data.img.map);
-	close(fd);
+	read_map(fd, &data.map);
+	//close(fd);
+	
 
 	print_gradient(data.img.gradient);
 
 	mlx_loop_hook(data.mlx_ptr, &render, &data);
 	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, &handle_keypress, &data);
+
 	mlx_loop(data.mlx_ptr);
+	mlx_destroy_image(data.mlx_ptr, data.img.mlx_img);
 
 	free(gradient);
 	return (0);
