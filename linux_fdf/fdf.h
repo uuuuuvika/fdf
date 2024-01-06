@@ -9,21 +9,21 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-# include <limits.h>
+#include <limits.h>
 #include "libs/minilibx-linux/mlx.h"
 #include "libs/the_libft/libft.h"
 
-#define WIDTH 800
+#define WIDTH 1800
 #define HEIGHT 800
 
 #define RED_COEFFICIENT 0.2126
 #define GREEN_COEFFICIENT 0.7152
 #define BLUE_COEFFICIENT 0.0722
 #define DARK_THRESHOLD 128
-# define BUFFER_SIZE 1024
+#define BUFFER_SIZE 1024
 
 #define GREEN_PIXEL 0xFF00
-# define MLX_ERROR 1
+#define MLX_ERROR 1
 
 typedef struct s_color
 {
@@ -32,13 +32,20 @@ typedef struct s_color
     int b;
 } t_color;
 
+typedef struct s_coords
+{
+    char    value;
+    double  x_iso;
+    double  y_iso;
+} t_coords;
+
 typedef struct s_map
 {
     int num_rows;
-    int max_num_cols;
-    char **values;
+    int num_cols;
     double a_z;
     double a_x;
+    t_coords **coords;
 } t_map;
 
 typedef struct s_img
@@ -77,6 +84,11 @@ void print_gradient(t_color *gradient);
 
 void img_pix_put(t_img *img, int x, int y, int color);
 
+// map
 void read_map(int fd, t_map *map);
+void malloc_for_z(t_map *map);
+void fill_z(int fd, t_map *map);
+void free_arr2D(char **arr2D);
+void cartesian_to_iso(t_map *map);
 
 #endif

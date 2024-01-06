@@ -144,49 +144,138 @@ void draw_line(t_img *img, int x1, int y1, int x2, int y2)
 	}
 }
 
-void draw_dots(t_img *img, t_map *map)
+void draw_dots(t_img *img, char **values, int rows, int columns, double a_x, double a_z)
 {
-	double x, y, xx, yy;
+	double x;
+	double y;
+	int z;
+	// double offset;
+	double scale;
+	double x_rotated, z_rotated;
 
+	scale = 15.0;
 	x = 0;
-	while (x < map->num_rows)
+	while (x < rows)
 	{
 		y = 0;
-		while (y < map->num_cols)
+		while (y < columns)
 		{
-			//z = map->coords[(int)x][(int)y].value;
-			xx = map->coords[(int)x][(int)y].x_iso + WIDTH / 2; 
-			yy = map->coords[(int)x][(int)y].y_iso + HEIGHT / 2; 
-			
-			if(xx >= 0 && xx <= WIDTH && yy >= 0 && yy <= HEIGHT)
-				img_pix_put(img, xx, yy, GREEN_PIXEL);
+			z = values[(int)x][(int)y];
+			// double x_offset = columns / 2;
+			// double y_offset = rows / 2;
+
+			x_rotated = x * cos(a_z) - y * sin(a_z);
+			z_rotated = (x * sin(a_z) + (y)*cos(a_z)) * cos(a_x) - z * sin(a_x);
+
+			x_rotated *= scale;
+			z_rotated *= scale;
+
+			// printf("x=%f, x45=%f, y=%f, y45=%f\n", x, x45, y, y45);
+			img_pix_put(img, x_rotated + WIDTH / 2, z_rotated + HEIGHT / 2, GREEN_PIXEL);
 			y++;
 		}
 		x++;
 	}
 }
 
-void cartesian_to_iso(t_map *map)
+void cartesian_to_iso(double *iso_x, double *iso_y, char **values, int rows, int columns, double a_x, double a_z)
 {
 	double x;
 	double y;
 	int z;
+	// double offset;
 	double scale;
+	double x_rotated, z_rotated;
 
-	scale = 30.0;
+	scale = 15.0;
 	x = 0;
-	while (x <  map->num_rows)
+	while (x < rows)
+	{
+		y = 0;
+		while (y < columns)
+		{
+			z = values[(int)x][(int)y];
+			// double x_offset = columns / 2;
+			// double y_offset = rows / 2;
+
+			x_rotated = x * cos(a_z) - y * sin(a_z);
+			z_rotated = (x * sin(a_z) + (y)*cos(a_z)) * cos(a_x) - z * sin(a_x);
+
+			x_rotated *= scale;
+			z_rotated *= scale;
+
+			iso_x = &x_rotated;
+			iso_y = &z_rotated;
+			// printf("x=%f, x45=%f, y=%f, y45=%f\n", x, x45, y, y45);
+
+			y++;
+		}
+		x++;
+	}
+}
+
+
+void loop(t_img *img, t_map *map)
+{
+	int x;
+	int y;
+	double x_rotated, y_rotated, x_1_rotated, y_1_rotated;
+	int scale;
+	int z;
+
+	scale = 10;
+
+	x = 0;
+	while (x < map->num_rows)
 	{
 		y = 0;
 		while (y <  map->num_cols)
 		{
 			z = map->coords[(int)x][(int)y].value;
-			map->coords[(int)x][(int)y].x_iso = x * cos(map->a_z) - y * sin(map->a_z);
-			map->coords[(int)x][(int)y].y_iso = (x * sin(map->a_z) + (y)*cos(map->a_z)) * cos(map->a_x) - z * sin(map->a_x);
 
-			map->coords[(int)x][(int)y].x_iso *= scale;
-			map->coords[(int)x][(int)y].y_iso *= scale;
-			printf("z=%d x_iso=%f y_iso=%f\n", z, map->coords[(int)x][(int)y].x_iso, map->coords[(int)x][(int)y].y_iso);
+			x_rotated = x * cos(map->a_z) - y * sin(map->a_z);
+			y_rotated = (x * sin(map->a_z) + (y)*cos(map->a_z)) * cos(map->a_x) - z * sin(map->a_x);
+
+			x_rotated *= scale;
+			y_rotated *= scale;
+
+			x_1_rotated = (x + 1) * cos(map->a_z) - y * sin(map->a_z);
+			y_1_rotated = (x * sin(map->a_z) + (y + 1) * cos(map->a_z)) * cos(map->a_x) - z * sin(map->a_x);
+
+			x_1_rotated *= scale;
+			y_1_rotated *= scale;
+
+			if (y == map->num_cols - 1 && x == map->num_rows - 1)
+				break;
+			if (y == map->num_cols - 1)
+			{
+				draw_line(img, x_rotated, y_rotated, x_1_rotated, y_rotated);
+			}
+			else if (x == map->num_rows - 1)
+			{
+				draw_line(img, x_rotated, y_rotated, x_rotated, y_1_rotated);
+			}
+			else
+			{
+				draw_line(img, x_rotated, y_rotated, x_1_rotated, y_rotated);
+				draw_line(img, x_rotated, y_rotated, x_rotated, y_1_rotated);
+			}
+
+			// if (y == map->num_cols - 1 && x == map->num_rows - 1)
+			// 	break;
+			// if (y == map->num_cols - 1)
+			// {
+			// 	draw_line(img, x * scale, y * scale, (x + 1) * scale, y * scale);
+			// }
+			// else if (x == map->num_rows - 1)
+			// {
+			// 	draw_line(img, x * scale, y * scale, x * scale, (y + 1) * scale);
+			// }
+			// else
+			// {
+			// 	draw_line(img, x * scale, y * scale, (x + 1) * scale, y * scale);
+			// 	draw_line(img, x * scale, y * scale, x * scale, (y + 1) * scale);
+			// }
 			y++;
 		}
 		x++;
@@ -205,21 +294,16 @@ int render(t_data *data)
 	{
 		mlx_destroy_image(data->mlx_ptr, data->img.mlx_img);
 		data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIDTH, HEIGHT);
-		cartesian_to_iso(&data->map);
-		draw_dots(&data->img, &data->map);
 	}
 
 	// draw_dots(&data->img, data->map.values, data->map.num_rows, data->map.num_cols, data->map.a_x, data->map.a_z);
-	// loop(&data->img, &data->map);
-
-
-	//draw_dots(&data->img, &data->map);
+	loop(&data->img, &data->map);
+	// draw_line(&data->img, 0, 0, 300, 10);
 	
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
 
 	last_a_z = data->map.a_z;
 	last_a_x = data->map.a_x;
-
 	return (0);
 }
 
@@ -251,8 +335,6 @@ int main(void)
 	// pylone has uneven columns ???
 	read_map(open("maps/42.fdf", O_RDONLY), &data.map);
 	fill_z(open("maps/42.fdf", O_RDONLY), &data.map);
-	cartesian_to_iso(&data.map);
-	draw_dots(&data.img, &data.map);
 
 	print_gradient(data.img.gradient);
 
