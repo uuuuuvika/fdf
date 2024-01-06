@@ -63,7 +63,7 @@ typedef struct s_img
     void *mlx_img;
     char *addr;
     int bpp;
-    int line_len;
+    int line_len; //???
     int endian;
     t_color *gradient;
 } t_img;

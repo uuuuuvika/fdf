@@ -21,7 +21,7 @@ void read_map(int fd, t_map *map)
 	map->num_cols = num_cols;
 	map->num_rows = num_rows;
 	map->a_z = 30.0 / 180 * 3.14159;
-	map->a_x = 45.0 / 180 * 3.14159;
+	map->a_x = 30.0 / 180 * 3.14159;
 	malloc_for_z(map);
 	close(fd);
 }
@@ -81,7 +81,7 @@ void cartesian_to_iso(t_map *map)
 	int z;
 	double scale;
 
-	scale = 20.00;
+	scale = 25.00;
 	x = 0;
 	while (x < map->num_rows)
 	{

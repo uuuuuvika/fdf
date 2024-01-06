@@ -3,23 +3,23 @@
 static double last_a_z = 0.0;
 static double last_a_x = 0.0;
 
-double	get_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur)
+double get_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur)
 {
 	double full_dist = hypot(x2 - x1, y2 - y1);
-    // the distance between beg. and the current point
-    double dist_to_current = hypot(x_cur - x1, y_cur - y1);
-    if (full_dist != 0.0)
-		//relative position of a point (x_cur, y_cur) 
-		//along a line between (x1, y1) and (x2, y2)
-        return (dist_to_current / full_dist); 
-    return 1.0;
+	// the distance between beg. and the current point
+	double dist_to_current = hypot(x_cur - x1, y_cur - y1);
+	if (full_dist != 0.0)
+		// relative position of a point (x_cur, y_cur)
+		// along a line between (x1, y1) and (x2, y2)
+		return (dist_to_current / full_dist);
+	return 1.0;
 }
 
 void draw_line(t_img *img, int x1, int y1, int x2, int y2)
 {
 	int x1_start = x1;
 	int y1_start = y1;
-	
+
 	int dx = abs(x2 - x1);
 	int dy = abs(y2 - y1);
 	int sx = (x1 < x2) ? 1 : -1;
@@ -32,14 +32,14 @@ void draw_line(t_img *img, int x1, int y1, int x2, int y2)
 		if (x1 >= 0 && x1 <= WIDTH && y1 >= 0 && y1 <= HEIGHT)
 		{
 			double position = get_position(x1_start, x2, y1_start, y2, x1, y1);
-			printf("position: %f\n", position);
-			//the gradient will be drawn from the first color to the second color
-			//the first color is the color of the leftmost pixel in the line
-			//the second color is the color of the rightmost pixel in the line
-			//the color of the current pixel is calculated by interpolating between the two colors
-			int r = round(255 * (1 - position) + 0 * position);
-			int g = round(222 * (1 - position) + 59 * position);
-			int b = round(189 * (1 - position) + 99 * position);
+			//printf("position: %f\n", position);
+			// the gradient will be drawn from the first color to the second color
+			// the first color is the color of the leftmost pixel in the line
+			// the second color is the color of the rightmost pixel in the line
+			// the color of the current pixel is calculated by interpolating between the two colors
+			int r = round(img->gradient[0].r * (1 - position) + img->gradient[1].r * position);
+			int g = round(img->gradient[0].g * (1 - position) + img->gradient[1].g * position);
+			int b = round(img->gradient[0].b * (1 - position) + img->gradient[1].b * position);
 			int color = (r << 16) | (g << 8) | b;
 			img_pix_put(img, x1, y1, color);
 		}
@@ -152,15 +152,15 @@ int render(t_data *data)
 	{
 		mlx_destroy_image(data->mlx_ptr, data->img.mlx_img);
 		data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIDTH, HEIGHT);
-
+		data->img.addr = mlx_get_data_addr(data->img.mlx_img, &data->img.bpp, &data->img.line_len, &data->img.endian);
 		cartesian_to_iso(&data->map);
 		draw_lines(&data->img, &data->map);
-		// draw_dots(&data->img, &data->map);
+		 //draw_dots(&data->img, &data->map);
 		last_a_z = data->map.a_z;
 		last_a_x = data->map.a_x;
-		//printf("a_z: %f, a_x: %f\n", data->map.a_z, data->map.a_x);
+		printf("a_z: %f, a_x: %f\n", data->map.a_z, data->map.a_x);
+		mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
 	}
-	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
 	return (0);
 }
 
@@ -189,6 +189,7 @@ int main(void)
 	data.img.addr = mlx_get_data_addr(data.img.mlx_img, &data.img.bpp, &data.img.line_len, &data.img.endian);
 	data.img.gradient = gradient;
 
+	// TODO: make a string name(fd)into constant
 	read_map(open("maps/42.fdf", O_RDONLY), &data.map);
 	fill_z(open("maps/42.fdf", O_RDONLY), &data.map);
 	cartesian_to_iso(&data.map);
