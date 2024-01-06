@@ -166,32 +166,6 @@ void draw_dots(t_img *img, t_map *map)
 	}
 }
 
-void cartesian_to_iso(t_map *map)
-{
-	double x;
-	double y;
-	int z;
-	double scale;
-
-	scale = 30.0;
-	x = 0;
-	while (x <  map->num_rows)
-	{
-		y = 0;
-		while (y <  map->num_cols)
-		{
-			z = map->coords[(int)x][(int)y].value;
-			map->coords[(int)x][(int)y].x_iso = x * cos(map->a_z) - y * sin(map->a_z);
-			map->coords[(int)x][(int)y].y_iso = (x * sin(map->a_z) + (y)*cos(map->a_z)) * cos(map->a_x) - z * sin(map->a_x);
-
-			map->coords[(int)x][(int)y].x_iso *= scale;
-			map->coords[(int)x][(int)y].y_iso *= scale;
-			printf("z=%d x_iso=%f y_iso=%f\n", z, map->coords[(int)x][(int)y].x_iso, map->coords[(int)x][(int)y].y_iso);
-			y++;
-		}
-		x++;
-	}
-}
 
 int render(t_data *data)
 {
