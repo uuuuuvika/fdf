@@ -10,19 +10,19 @@ int handle_keypress(int keysym, t_data *data)
 	}
 	if (keysym == XK_Up)
 	{
-		data->map.a_x -= 0.1;
+		data->map.a_x += 0.05;
 	}
 	if (keysym == XK_Down)
 	{
-		data->map.a_x += 0.1;
+		data->map.a_x -= 0.05;
 	}
 	if (keysym == XK_Left)
 	{
-		data->map.a_z -= 0.1;
+		data->map.a_z += 0.05;
 	}
 	if (keysym == XK_Right)
 	{
-		data->map.a_z += 0.1;
+		data->map.a_z -= 0.05;
 	}
 	return (0);
 }

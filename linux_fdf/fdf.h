@@ -23,6 +23,7 @@
 #define BUFFER_SIZE 1024
 
 #define GREEN_PIXEL 0xFF00
+#define PURPLE_PIXEL 0xFF00FF
 #define MLX_ERROR 1
 
 typedef struct s_color
@@ -34,7 +35,7 @@ typedef struct s_color
 
 typedef struct s_coords
 {
-    char    value;
+    int    value;
     double  x_iso;
     double  y_iso;
 } t_coords;
