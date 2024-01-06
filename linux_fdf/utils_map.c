@@ -87,7 +87,7 @@ void cartesian_to_iso(t_map *map)
 	int z;
 	double scale;
 
-	scale = 30.0;
+	scale = 52.0;
 	x = 0;
 	while (x <  map->num_rows)
 	{
@@ -100,7 +100,7 @@ void cartesian_to_iso(t_map *map)
 
 			map->coords[(int)x][(int)y].x_iso *= scale;
 			map->coords[(int)x][(int)y].y_iso *= scale;
-			printf("z=%d x_iso=%f y_iso=%f\n", z, map->coords[(int)x][(int)y].x_iso, map->coords[(int)x][(int)y].y_iso);
+			//printf("z=%d x_iso=%f y_iso=%f\n", z, map->coords[(int)x][(int)y].x_iso, map->coords[(int)x][(int)y].y_iso);
 			y++;
 		}
 		x++;

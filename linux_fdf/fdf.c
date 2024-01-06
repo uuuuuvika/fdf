@@ -43,20 +43,20 @@ int draw_square(t_img *img)
 	return (0);
 }
 
-void draw_line(t_img *img, int x1, int y1, int x2, int y2)
+void draw_line(t_img *img, double x1, double y1, double x2, double y2)
 {
 	// Iterators, counters required by algorithm
-	int x, y, dx, dy, dx1, dy1, px, py, xe, ye, i;
+	double x, y, dx, dy, dx1, dy1, px, py, xe, ye, i;
 	// Calculate line deltas
 	dx = x2 - x1;
 	dy = y2 - y1;
 
 	// Create a positive copy of deltas (makes iterating easier)
-	dx1 = abs(dx);
-	dy1 = abs(dy);
+	dx1 = fabs(dx);
+	dy1 = fabs(dy);
 	// Calculate error intervals for both axis
-	px = 2 * dy1 - dx1;
-	py = 2 * dx1 - dy1;
+	px = 2.00 * dy1 - dx1;
+	py = 2.00 * dx1 - dy1;
 	// The line is X-axis dominant
 	if (dy1 <= dx1)
 	{
@@ -73,7 +73,8 @@ void draw_line(t_img *img, int x1, int y1, int x2, int y2)
 			y = y2;
 			xe = x1;
 		}
-		img_pix_put(img, x + WIDTH / 2, y + HEIGHT / 2, GREEN_PIXEL);
+		if (x >= 0 && x <= WIDTH && y >= 0 && y <= HEIGHT)
+			img_pix_put(img, x, y, GREEN_PIXEL);
 		// Rasterize the line
 		for (i = 0; x < xe; i++)
 		{
@@ -81,13 +82,13 @@ void draw_line(t_img *img, int x1, int y1, int x2, int y2)
 			// Deal with octants...
 			if (px < 0)
 			{
-				px = px + 2 * dy1;
+				px = px + 2.00 * dy1;
 			}
 			else
 			{
 				if ((dx < 0 && dy < 0) || (dx > 0 && dy > 0))
 				{
-					y = y + 1;
+					y = y + 1.00;
 				}
 				else
 				{
@@ -97,7 +98,8 @@ void draw_line(t_img *img, int x1, int y1, int x2, int y2)
 			}
 			// Draw pixel from line span at
 			// currently rasterized position
-			img_pix_put(img, x + WIDTH / 2, y + HEIGHT / 2, GREEN_PIXEL);
+			if (x >= 0 && x <= WIDTH && y >= 0 && y <= HEIGHT)
+				img_pix_put(img, x, y, GREEN_PIXEL);
 		}
 	}
 	else
@@ -115,7 +117,8 @@ void draw_line(t_img *img, int x1, int y1, int x2, int y2)
 			y = y2;
 			ye = y1;
 		}
-		img_pix_put(img, x + WIDTH / 2, y + HEIGHT / 2, GREEN_PIXEL);
+		if (x >= 0 && x <= WIDTH && y >= 0 && y <= HEIGHT)
+			img_pix_put(img, x, y, GREEN_PIXEL);
 		// Rasterize the line
 		for (i = 0; y < ye; i++)
 		{
@@ -139,8 +142,50 @@ void draw_line(t_img *img, int x1, int y1, int x2, int y2)
 			}
 			// Draw pixel from line span at
 			// currently rasterized position
-			img_pix_put(img, x + WIDTH / 2, y + HEIGHT / 2, GREEN_PIXEL);
+			if (x >= 0 && x <= WIDTH && y >= 0 && y <= HEIGHT)
+				img_pix_put(img, x, y, GREEN_PIXEL);
+			y++;
 		}
+	}
+}
+
+void draw_lines(t_img *img, t_map *map)
+{
+	int x;
+	int y;
+	double nx_next;
+	double ny_next;
+	double nx;
+	double ny;
+
+	// int scale;
+
+	x = 0;
+	// scale = 20;
+
+	while (x < map->num_rows)
+	{
+		y = 0;
+		while (y < map->num_cols)
+		{
+			nx = map->coords[x][y].x_iso + WIDTH / 2;
+			ny = map->coords[x][y].y_iso + HEIGHT / 2;
+
+			if (x < map->num_rows - 1)
+			{
+				nx_next = map->coords[x + 1][y].x_iso + WIDTH / 2;
+				ny_next = map->coords[x + 1][y].y_iso + HEIGHT / 2;
+				draw_line(img, nx, ny, nx_next, ny_next);
+			}
+			if (y < map->num_cols - 1)
+			{
+				nx_next = map->coords[x][y + 1].x_iso + WIDTH / 2;
+				ny_next = map->coords[x][y + 1].y_iso + HEIGHT / 2;
+				draw_line(img, nx, ny, nx_next, ny_next);
+			}
+			y++;
+		}
+		x++;
 	}
 }
 
@@ -154,18 +199,17 @@ void draw_dots(t_img *img, t_map *map)
 		y = 0;
 		while (y < map->num_cols)
 		{
-			//z = map->coords[(int)x][(int)y].value;
-			xx = map->coords[(int)x][(int)y].x_iso + WIDTH / 2; 
-			yy = map->coords[(int)x][(int)y].y_iso + HEIGHT / 2; 
-			
-			if(xx >= 0 && xx <= WIDTH && yy >= 0 && yy <= HEIGHT)
+			// z = map->coords[(int)x][(int)y].value;
+			xx = map->coords[(int)x][(int)y].x_iso + WIDTH / 2;
+			yy = map->coords[(int)x][(int)y].y_iso + HEIGHT / 2;
+
+			if (xx >= 0 && xx <= WIDTH && yy >= 0 && yy <= HEIGHT)
 				img_pix_put(img, xx, yy, GREEN_PIXEL);
 			y++;
 		}
 		x++;
 	}
 }
-
 
 int render(t_data *data)
 {
@@ -180,15 +224,15 @@ int render(t_data *data)
 		mlx_destroy_image(data->mlx_ptr, data->img.mlx_img);
 		data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIDTH, HEIGHT);
 		cartesian_to_iso(&data->map);
-		draw_dots(&data->img, &data->map);
+		// draw_dots(&data->img, &data->map);
+		draw_lines(&data->img, &data->map);
 	}
 
 	// draw_dots(&data->img, data->map.values, data->map.num_rows, data->map.num_cols, data->map.a_x, data->map.a_z);
 	// loop(&data->img, &data->map);
 
+	// draw_dots(&data->img, &data->map);
 
-	//draw_dots(&data->img, &data->map);
-	
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
 
 	last_a_z = data->map.a_z;
@@ -223,10 +267,11 @@ int main(void)
 	data.img.gradient = gradient;
 
 	// pylone has uneven columns ???
-	read_map(open("maps/42.fdf", O_RDONLY), &data.map);
-	fill_z(open("maps/42.fdf", O_RDONLY), &data.map);
+	read_map(open("maps/test.fdf", O_RDONLY), &data.map);
+	fill_z(open("maps/test.fdf", O_RDONLY), &data.map);
 	cartesian_to_iso(&data.map);
-	draw_dots(&data.img, &data.map);
+	// draw_dots(&data.img, &data.map);
+	draw_lines(&data.img, &data.map);
 
 	print_gradient(data.img.gradient);
 
