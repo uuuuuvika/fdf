@@ -1,27 +1,91 @@
 #include "fdf.h"
 
-void draw_line(t_img *img, int x1, int y1, int x2, int y2) {
-    int dx = abs(x2 - x1);
-    int dy = abs(y2 - y1);
-    int sx = (x1 < x2) ? 1 : -1;
-    int sy = (y1 < y2) ? 1 : -1;
-    int err = dx - dy;
+static double last_a_z = 0.0;
+static double last_a_x = 0.0;
+static double last_a_y = 0.0;
+
+
+double get_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur)
+{
+	double full_dist = hypot(x2 - x1, y2 - y1); //0,0 to xy, so 
+	// the distance between beg. and the current point
+	double dist_to_current = hypot(x_cur - x1, y_cur - y1);
+	if (full_dist != 0.0)
+		// relative position of a point (x_cur, y_cur)
+		// along a line between (x1, y1) and (x2, y2)
+		return (dist_to_current / full_dist);
+	return 1.0;
+}
+
+void draw_line(t_img *img, int x1, int y1, int x2, int y2)
+{
+	int x1_start = x1;
+	int y1_start = y1;
+
+	int dx = abs(x2 - x1);
+	int dy = abs(y2 - y1);
+	int sx = (x1 < x2) ? 1 : -1;
+	int sy = (y1 < y2) ? 1 : -1;
+	int err = dx - dy;
 	int err2;
 
-    while (!(x1 == x2 && y1 == y2)) {
-        if (1 >= 0 && x1 <= WIDTH && y1 >= 0 && y1 <= HEIGHT)
-			img_pix_put(img, x1, y1, GREEN_PIXEL);
-        err2 = 2 * err;
-        if (err2 > -dy) {
-            err -= dy;
-            x1 += sx;
-        }
-        if (err2 < dx) {
-            err += dx;
-            y1 += sy;
-        }
-    }
+	while (!(x1 == x2 && y1 == y2))
+	{
+		if (x1 >= 0 && x1 <= WIDTH && y1 >= 0 && y1 <= HEIGHT)
+		{
+			double position = get_position(x1_start, x2, y1_start, y2, x1, y1);
+			// printf("position: %f\n", position);
+			//  the gradient will be drawn from the first color to the second color
+			//  the first color is the color of the leftmost pixel in the line
+			//  the second color is the color of the rightmost pixel in the line
+			//  the color of the current pixel is calculated by interpolating between the two colors
+			int r = round(img->gradient[0].r * (1 - position) + img->gradient[1].r * position);
+			int g = round(img->gradient[0].g * (1 - position) + img->gradient[1].g * position);
+			int b = round(img->gradient[0].b * (1 - position) + img->gradient[1].b * position);
+			int color = (r << 16) | (g << 8) | b;
+			img_pix_put(img, x1, y1, color);
+		}
+
+		err2 = 2 * err;
+		if (err2 > -dy)
+		{
+			err -= dy;
+			x1 += sx;
+		}
+		if (err2 < dx)
+		{
+			err += dx;
+			y1 += sy;
+		}
+	}
 }
+
+// void draw_line(t_img *img, int x1, int y1, int x2, int y2)
+// {
+// 	int dx = abs(x2 - x1);
+// 	int dy = abs(y2 - y1);
+// 	int sx = (x1 < x2) ? 1 : -1;
+// 	int sy = (y1 < y2) ? 1 : -1;
+// 	int err = dx - dy;
+// 	int err2;
+
+// 	while (!(x1 == x2 && y1 == y2))
+// 	{
+// 		if (1 >= 0 && x1 <= WIDTH && y1 >= 0 && y1 <= HEIGHT)
+// 			img_pix_put(img, x1, y1, GREEN_PIXEL);
+// 		err2 = 2 * err;
+// 		if (err2 > -dy)
+// 		{
+// 			err -= dy;
+// 			x1 += sx;
+// 		}
+// 		if (err2 < dx)
+// 		{
+// 			err += dx;
+// 			y1 += sy;
+// 		}
+// 	}
+// }
 
 void draw_lines(t_img *img, t_map *map)
 {
@@ -45,13 +109,13 @@ void draw_lines(t_img *img, t_map *map)
 			{
 				nx_next = map->coords[x + 1][y].x_iso + WIDTH / 2;
 				ny_next = map->coords[x + 1][y].y_iso + HEIGHT / 2;
-				draw_line(img, ceil(nx), ceil(ny), ceil(nx_next), ceil(ny_next));
+				draw_line(img, nx, ny, nx_next, ny_next);
 			}
 			if (y < map->num_cols - 1)
 			{
 				nx_next = map->coords[x][y + 1].x_iso + WIDTH / 2;
 				ny_next = map->coords[x][y + 1].y_iso + HEIGHT / 2;
-				draw_line(img, ceil(nx), ceil(ny), ceil(nx_next), ceil(ny_next));
+				draw_line(img, nx, ny, nx_next, ny_next);
 			}
 			y++;
 		}
@@ -65,6 +129,7 @@ void draw_dots(t_img *img, t_map *map)
 	int x, y;
 
 	x = 0;
+	
 	while (x < map->num_rows)
 	{
 		y = 0;
@@ -86,44 +151,36 @@ int render(t_data *data)
 {
 	if (data->win_ptr == NULL)
 		return (MLX_ERROR);
-	// draw_square(&data->img);
-
-	static double last_a_z = 0;
-	static double last_a_x = 0;
-	if (last_a_z != data->map.a_z || last_a_x != data->map.a_x)
+	if (last_a_z != data->map.a_z || last_a_x != data->map.a_x || last_a_y != data->map.a_y)
 	{
 		mlx_destroy_image(data->mlx_ptr, data->img.mlx_img);
 		data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIDTH, HEIGHT);
-		last_a_z = data->map.a_z;
-		last_a_x = data->map.a_x;
+		// data->img.addr = mlx_get_data_addr(data->img.mlx_img, &data->img.bpp, &data->img.line_len, &data->img.endian);
+		// printf("adress: %p\n", data->img.addr);
 		cartesian_to_iso(&data->map);
 		draw_lines(&data->img, &data->map);
-		draw_dots(&data->img, &data->map);
-		
+		// draw_dots(&data->img, &data->map);
+		last_a_z = data->map.a_z;
+		last_a_x = data->map.a_x;
+		last_a_y = data->map.a_y;
+
+		//printf("a_z: %f, a_x: %f, a_y: %f\n", data->map.a_z * 180 / 3.14159, data->map.a_x * 180 / 3.14159, data->map.a_y * 180 / 3.14159);
+		mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
 	}
-	//last_a_z = data->map.a_z;
-	//last_a_x = data->map.a_x;
-	//cartesian_to_iso(&data->map);
-	// draw_dots(&data->img, &data->map);
-	//draw_lines(&data->img, &data->map);
-	// draw_dots(&data->img, data->map.values, data->map.num_rows, data->map.num_cols, data->map.a_x, data->map.a_z);
-	// loop(&data->img, &data->map);
-
-	// draw_dots(&data->img, &data->map);
-
-	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
-
-	// last_a_z = data->map.a_z;
-	// last_a_x = data->map.a_x;
-
 	return (0);
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
-	static t_data data;
+	static t_data data; //???
 	t_color *gradient = gen_gradient();
+	char *map_name;
 
+	if (argc != 2)
+	{
+		printf("WRONG MAP OR NO MAP :(\n");
+		return (MLX_ERROR);
+	}
 	if (gradient == NULL)
 		return (MLX_ERROR);
 
@@ -144,13 +201,19 @@ int main(void)
 	data.img.addr = mlx_get_data_addr(data.img.mlx_img, &data.img.bpp, &data.img.line_len, &data.img.endian);
 	data.img.gradient = gradient;
 
-	// pylone has uneven columns ???
-	read_map(open("maps/42.fdf", O_RDONLY), &data.map);
-	fill_z(open("maps/42.fdf", O_RDONLY), &data.map);
+	// TODO: make a string name(fd)into constant
+	map_name = ft_strjoin("maps/", argv[1]);
+	map_name = ft_spec_strjoin(map_name, ".fdf");
+
+	read_map(open(map_name, O_RDONLY), &data.map);
+	fill_z(open(map_name, O_RDONLY), &data.map);
+
+	free(map_name);
+
 	cartesian_to_iso(&data.map);
-	
+
 	draw_lines(&data.img, &data.map);
-	draw_dots(&data.img, &data.map);
+	// draw_dots(&data.img, &data.map);
 
 	print_gradient(data.img.gradient);
 
@@ -158,8 +221,11 @@ int main(void)
 	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, &handle_keypress, &data);
 
 	mlx_loop(data.mlx_ptr);
-	mlx_destroy_image(data.mlx_ptr, data.img.mlx_img);
 
+	mlx_destroy_image(data.mlx_ptr, data.img.mlx_img);
+	mlx_destroy_window(data.mlx_ptr, data.win_ptr);
+	data.win_ptr = NULL;
+	free(data.win_ptr);
 	free(gradient);
 	return (0);
 }

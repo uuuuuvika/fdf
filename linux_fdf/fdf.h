@@ -13,7 +13,7 @@
 #include "libs/minilibx-linux/mlx.h"
 #include "libs/the_libft/libft.h"
 
-#define WIDTH 1800
+#define WIDTH 1100
 #define HEIGHT 800
 
 #define RED_COEFFICIENT 0.2126
@@ -46,6 +46,7 @@ typedef struct s_map
     int num_cols;
     double a_z;
     double a_x;
+    double a_y;
     t_coords **coords;
 } t_map;
 

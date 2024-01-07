@@ -10,19 +10,27 @@ int handle_keypress(int keysym, t_data *data)
 	}
 	if (keysym == XK_Up)
 	{
-		data->map.a_x += 0.05;
+		data->map.a_x += 0.01;
 	}
 	if (keysym == XK_Down)
 	{
-		data->map.a_x -= 0.05;
+		data->map.a_x -= 0.01;
 	}
 	if (keysym == XK_Left)
 	{
-		data->map.a_z += 0.05;
+		data->map.a_z += 0.01;
 	}
 	if (keysym == XK_Right)
 	{
-		data->map.a_z -= 0.05;
+		data->map.a_z -= 0.01;
+	}
+	if (keysym == XK_a)
+	{
+		data->map.a_y += 0.01;
+	}
+	if (keysym == XK_d)
+	{
+		data->map.a_y -= 0.01;
 	}
 	return (0);
 }
