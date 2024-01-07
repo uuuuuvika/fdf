@@ -85,6 +85,7 @@ t_color *gen_gradient(void);
 void print_gradient(t_color *gradient);
 
 void img_pix_put(t_img *img, int x, int y, int color);
+int  gradient_to_int(t_color *color);
 
 // map
 void read_map(int fd, t_map *map);
