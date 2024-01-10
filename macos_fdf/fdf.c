@@ -4,22 +4,14 @@
 static double last_a_z = 0.0;
 static double last_a_x = 0.0;
 
-// class var mouseLocation: NSPoint { get }
 void getMousePosition(int *x, int *y)
 {
-	// NSPoint mouseLoc;
-	// mouseLoc = [NSEvent mouseLocation]; // get current mouse position
-	// NSLog(@"Mouse location: %f %f", mouseLoc.x, mouseLoc.y);
 	CGEventRef event = CGEventCreate(NULL);
 	CGPoint mouseLoc = CGEventGetLocation(event);
 	*x = (int)mouseLoc.x;
 	*y = (int)mouseLoc.y;
 	printf("Mouse location: %f %f\n", mouseLoc.x, mouseLoc.y);
 	CFRelease(event);
-
-	// NSTouch mouseLocation = [NSEvent mouseLocation];
-	// *x = (int)mouseLocation.x;
-	// *y = (int)mouseLocation.y;
 }
 
 double get_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur)
@@ -27,13 +19,7 @@ double get_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur)
 	double full_dist = hypot(x2 - x1, y2 - y1);
 	double dist_to_current = hypot(x_cur - x1, y_cur - y1);
 	if (full_dist != 0.0)
-	{
-		// relative position of a point (x_cur, y_cur)
-		// along a line between (x1, y1) and (x2, y2)
-		// it is ALWAYS IN A RANGE FROM 0 TO 1
-		// printf("dist: %f\n", dist_to_current / full_dist);
 		return (dist_to_current / full_dist);
-	}
 	return 1.0;
 }
 
@@ -108,15 +94,7 @@ void draw_line(t_img *img, int x1, int y1, int x2, int y2)
 		if (x1 >= 0 && x1 <= WIDTH && y1 >= 0 && y1 <= HEIGHT)
 		{
 			double position = get_position(x1_start, x2, y1_start, y2, x1, y1);
-			// printf("position: %f\n", position);
-			//   the gradient will be drawn from the first color to the second color
-			//   the first color is the color of the leftmost pixel in the line
-			//   the second color is the color of the rightmost pixel in the line
-			//   the color of the current pixel is calculated by interpolating between the two colors
 			int r = round(img->gradient[0].r * (1 - position) + img->gradient[1].r * position);
-			// 1.st time: 222 * -0 + 20 * 0 = -222 + 20 = - 202
-			// 2.nd time: 222 * -0.16 + 20 * 0.16 = 208
-			// printf("r value: %d\n", r);
 			int g = round(img->gradient[0].g * (1 - position) + img->gradient[1].g * position);
 			int b = round(img->gradient[0].b * (1 - position) + img->gradient[1].b * position);
 			int color = (r << 16) | (g << 8) | b;
