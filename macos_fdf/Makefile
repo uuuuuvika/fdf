@@ -9,7 +9,7 @@ MINILIBX_DIR	:= libs/minilibx_macos/
 MINILIBXCC		:= -I mlx -L $(MINILIBX_DIR) -lmlx
 OPENGL			:= -framework OpenGL -framework AppKit
 
-SRC	=	fdf.c	utils_colors.c	user_controls.c	utils_image.c	utils_map.c draw.c
+SRC	=	fdf.c	utils_colors.c	user_controls.c	utils_image.c	utils_map.c draw.c utils_free.c
 OBJ	=	$(SRC:%.c=%.o)
 
 all:	makelibs

@@ -3,29 +3,13 @@
 int handle_keypress(int key, t_data *data)
 {
 	if (key == KEY_ESC)
-	{
-		mlx_destroy_image(data->mlx_ptr, data->img.mlx_img);
-		mlx_destroy_window(data->mlx_ptr, data->win_ptr);
-		data->win_ptr = NULL;
-		free(data->win_ptr);
-		exit(0);
-	}
+		destroy_win_and_img(data);
 	if (key == KEY_UP)
-	{
-		data->map.a_x += 0.05;
-	}
+		data->map.scale += 0.5;
 	if (key == KEY_DOWN)
-	{
-		data->map.a_x -= 0.05;
-	}
-	if (key == KEY_LEFT)
-	{
-		data->map.a_z += 0.05;
-	}
-	if (key == KEY_RIGHT)
-	{
-		data->map.a_z -= 0.05;
-	}
+		data->map.scale -= 0.5;
+	if (key == SPACE)
+		data->map.rotation_active = !data->map.rotation_active;
 	return (0);
 }
 
@@ -35,8 +19,31 @@ void get_mouse_position(int *x, int *y)
 	CGPoint mouseLoc = CGEventGetLocation(event);
 	*x = (int)mouseLoc.x;
 	*y = (int)mouseLoc.y;
-	printf("Mouse location: %f %f\n", mouseLoc.x, mouseLoc.y);
+	//printf("Mouse location: %f %f\n", mouseLoc.x, mouseLoc.y);
 	CFRelease(event);
+}
+
+void update_angle(double *angle, int old_position, int new_position, float increment)
+{
+	if (new_position > old_position)
+		*angle -= increment;
+	else if (new_position < old_position)
+		*angle += increment;
+}
+
+void update_rotation(t_data  *data, float increment)
+{
+    static int mouse_x;
+    static int mouse_y;
+
+    if (!data->map.rotation_active)
+        return ;
+		
+    get_mouse_position(&mouse_x, &mouse_y);
+    update_angle(&data->map.a_z, data->mouse_x, mouse_x, increment);
+    update_angle(&data->map.a_x, data->mouse_y, mouse_y, increment);
+    data->mouse_x = mouse_x;
+    data->mouse_y = mouse_y;
 }
 
 

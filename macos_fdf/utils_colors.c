@@ -12,22 +12,16 @@ t_color *gen_gradient(void)
     srand(time(NULL));
 
     t_color *gradients = malloc(2 * sizeof(t_color));
-    if (gradients == NULL) {
+    if (gradients == NULL)
         return NULL;
-    }
-
     do
     {
         gradients[0].r = rand() % 256;
         gradients[0].g = rand() % 256;
         gradients[0].b = rand() % 256;
-
         gradients[1].r = rand() % 256;
         gradients[1].g = rand() % 256;
         gradients[1].b = rand() % 256;
-
-        printf("First gradient: %d\n", is_dark(gradients[0]));
-        printf("Second gradient: %d\n", is_dark(gradients[1]));
     } while (is_dark(gradients[0]) || is_dark(gradients[1]));
 
     return gradients;
@@ -49,4 +43,38 @@ void print_gradient(t_color *gradient)
 int gradient_to_int(t_color *color)
 {
     return (color->r << 16) | (color->g << 8) | color->b;
+}
+
+void colorize_points(t_img *img, t_map *map)
+{
+    int minVal = map->coords[0][0].value;
+    int maxVal = map->coords[0][0].value;
+
+
+    for (int i = 0; i < map->num_rows; ++i) {
+        for (int j = 0; j < map->num_cols; ++j) {
+            if (map->coords[i][j].value < minVal) {
+                minVal = map->coords[i][j].value;
+            }
+            if (map->coords[i][j].value > maxVal) {
+                maxVal = map->coords[i][j].value;
+            }
+        }
+    }
+
+    for (int i = 0; i < map->num_rows; ++i) {
+        for (int j = 0; j < map->num_cols; ++j) {
+
+            double factor = (double)(map->coords[i][j].value - minVal) / (maxVal - minVal);
+
+            map->coords[i][j].color.r = map->gradient[0].r + factor * (map->gradient[1].r -map->gradient[0].r);
+            map->coords[i][j].color.g = map->gradient[0].g + factor * (map->gradient[1].g - map->gradient[0].g);
+            map->coords[i][j].color.b  = map->gradient[0].b + factor * (map->gradient[1].b - map->gradient[0].b);
+            printf("R: %d\n", map->coords[i][j].color.r);
+            printf("G: %d\n", map->coords[i][j].color.g);
+            printf("B: %d\n", map->coords[i][j].color.b);
+            //printf("\n");
+            //printf("Color: %d\n", gradient_to_int(&map->coords[i][j].color));
+        }
+    }
 }
