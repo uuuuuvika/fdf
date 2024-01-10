@@ -50,12 +50,3 @@ int gradient_to_int(t_color *color)
 {
     return (color->r << 16) | (color->g << 8) | color->b;
 }
-
-double get_pix_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur)
-{
-	double full_dist = hypot(x2 - x1, y2 - y1);
-	double dist_to_current = hypot(x_cur - x1, y_cur - y1);
-	if (full_dist != 0.0)
-		return (dist_to_current / full_dist);
-	return 1.0;
-}
