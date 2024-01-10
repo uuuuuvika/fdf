@@ -1,8 +1,5 @@
 #include "fdf.h"
 
-// get number of rows in map
-// get number of columns in map
-// bring back error checking for bad num columns
 void read_map(int fd, t_map *map)
 {
 	int num_rows;
@@ -86,7 +83,7 @@ void cartesian_to_iso(t_map *map)
 	int z;
 	double scale;
 
-	scale = 20.0;
+	scale = 30.0;
 	x = 0;
 
 	int off_x = map->num_rows / 2;

@@ -29,5 +29,14 @@ int handle_keypress(int key, t_data *data)
 	return (0);
 }
 
+void get_mouse_position(int *x, int *y)
+{
+	CGEventRef event = CGEventCreate(NULL);
+	CGPoint mouseLoc = CGEventGetLocation(event);
+	*x = (int)mouseLoc.x;
+	*y = (int)mouseLoc.y;
+	printf("Mouse location: %f %f\n", mouseLoc.x, mouseLoc.y);
+	CFRelease(event);
+}
 
 

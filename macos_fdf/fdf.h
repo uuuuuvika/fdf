@@ -4,6 +4,7 @@
 #include <time.h>
 #include <X11/X.h>
 // #include <X11/keysym.h>
+#include <CoreGraphics/CoreGraphics.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -78,13 +79,16 @@ typedef struct s_data
     t_map map;
 } t_data;
 
-// functions
+
 int handle_keypress(int key, t_data *data);
+void get_mouse_position(int *x, int *y);
 
 int is_dark(t_color color);
 t_color *gen_gradient(void);
 void print_gradient(t_color *gradient);
-int  gradient_to_int(t_color *color);
+int gradient_to_int(t_color *color);
+
+double get_pix_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur);
 
 void img_pix_put(t_img *img, int x, int y, int color);
 
@@ -94,5 +98,10 @@ void malloc_for_z(t_map *map);
 void fill_z(int fd, t_map *map);
 void free_arr2D(char **arr2D);
 void cartesian_to_iso(t_map *map);
+
+void draw_base_line(t_img *img, int x1, int y1, int x2, int y2);
+void draw_far_line(t_img *img, int x1, int y1, int x2, int y2);
+void draw_line(t_img *img, int x1, int y1, int x2, int y2);
+void draw_lines(t_img *img, t_map *map);
 
 #endif

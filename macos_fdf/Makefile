@@ -2,14 +2,14 @@ NAME	= fdf
 
 CC		= gcc
 RM		= rm -f
-CFLAGS 	= -g -Wall -Wextra  #-fsanitize=address #-Werror
+CFLAGS 	= -g -Wall -Wextra  -I/usr/X11/include #-fsanitize=address #-Werror
 
 LIBFT			= libs/the_libft/libft.a
 MINILIBX_DIR	:= libs/minilibx_macos/
 MINILIBXCC		:= -I mlx -L $(MINILIBX_DIR) -lmlx
 OPENGL			:= -framework OpenGL -framework AppKit
 
-SRC	=	fdf.c	utils_colors.c	keypress_handling.c	utils_image.c	utils_map.c
+SRC	=	fdf.c	utils_colors.c	keypress_handling.c	utils_image.c	utils_map.c draw.c
 OBJ	=	$(SRC:%.c=%.o)
 
 all:	makelibs
