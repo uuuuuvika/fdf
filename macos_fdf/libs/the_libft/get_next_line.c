@@ -12,7 +12,7 @@ static size_t ft_spec_strlen(char *str)
 	return (i);
 }
 
-static char *ft_spec_strjoin(char *str1, char *str2)
+char *ft_spec_strjoin(char *str1, char *str2)
 {
 	int i;
 	char *newstr;

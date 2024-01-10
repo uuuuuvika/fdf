@@ -6,7 +6,7 @@
 /*   By: vika <vika@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 00:07:49 by vshcherb          #+#    #+#             */
-/*   Updated: 2024/01/03 21:11:11 by vika             ###   ########.fr       */
+/*   Updated: 2024/01/10 00:43:16 by vika             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ t_list			*ft_lstmap(t_list *lst,
 					void *(*f)(void *), void (*del)(void *));
 
 // int				shift_buff(char *buff);
-// char			*ft_spec_strjoin(char *str1, char *str2);
+char			*ft_spec_strjoin(char *str1, char *str2);
 char			*get_next_line(int fd);
 
 #endif

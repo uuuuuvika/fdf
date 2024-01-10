@@ -46,7 +46,7 @@ typedef struct s_map
     int num_cols;
     double a_z;
     double a_x;
-    double a_y;
+   
     t_coords **coords;
 } t_map;
 
@@ -69,13 +69,6 @@ typedef struct s_data
     t_map map;
 } t_data;
 
-// typedef struct s_cart {
-//     double x, y, z;
-// } t_cart;
-
-// typedef struct s_iso{
-//     double iso_x, iso_y;
-// } t_iso;
 
 // functions
 int handle_keypress(int key, t_data *data);
@@ -83,9 +76,9 @@ int handle_keypress(int key, t_data *data);
 int is_dark(t_color color);
 t_color *gen_gradient(void);
 void print_gradient(t_color *gradient);
+int  gradient_to_int(t_color *color);
 
 void img_pix_put(t_img *img, int x, int y, int color);
-int  gradient_to_int(t_color *color);
 
 // map
 void read_map(int fd, t_map *map);

@@ -72,6 +72,8 @@ typedef struct s_data
 {
     void *mlx_ptr;
     void *win_ptr;
+    int mouse_x;
+    int mouse_y;
     t_img img;
     t_map map;
 } t_data;
@@ -82,6 +84,7 @@ int handle_keypress(int key, t_data *data);
 int is_dark(t_color color);
 t_color *gen_gradient(void);
 void print_gradient(t_color *gradient);
+int  gradient_to_int(t_color *color);
 
 void img_pix_put(t_img *img, int x, int y, int color);
 
