@@ -17,6 +17,7 @@ int render(t_data *data)
 		data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIDTH, HEIGHT);
 		data->img.addr = mlx_get_data_addr(data->img.mlx_img, &data->img.bpp, &data->img.line_len, &data->img.endian);
 		cartesian_to_iso(&data->map);
+		//draw_dots(&data->img, &data->map);
 		draw_lines(&data->img, &data->map);
 		last_a_z = data->map.a_z;
 		last_a_x = data->map.a_x;
@@ -62,12 +63,13 @@ int main(int argc, char **argv)
 
 	read_map(open(map_name, O_RDONLY), &data.map);
 	fill_z(open(map_name, O_RDONLY), &data.map);
-
 	free(map_name);
 
-	// colorize_points(&data.img, &data.map);
+	colorize_points(&data.img, &data.map);
+	
 	cartesian_to_iso(&data.map);
 
+	//draw_dots(&data.img, &data.map);
 	draw_lines(&data.img, &data.map);
 
 	print_gradient(data.map.gradient);

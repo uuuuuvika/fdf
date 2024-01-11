@@ -23,7 +23,7 @@ void get_mouse_position(int *x, int *y)
 	CFRelease(event);
 }
 
-void update_angle(double *angle, int old_position, int new_position, float increment)
+void update_angle(double *angle, int old_position, int new_position, double increment)
 {
 	if (new_position > old_position)
 		*angle -= increment;
@@ -31,7 +31,7 @@ void update_angle(double *angle, int old_position, int new_position, float incre
 		*angle += increment;
 }
 
-void update_rotation(t_data  *data, float increment)
+void update_rotation(t_data  *data, double increment)
 {
     static int mouse_x;
     static int mouse_y;

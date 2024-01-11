@@ -47,17 +47,16 @@ int gradient_to_int(t_color *color)
 
 void colorize_points(t_img *img, t_map *map)
 {
-    int minVal = map->coords[0][0].value;
-    int maxVal = map->coords[0][0].value;
-
+    int min_val = map->coords[0][0].value;
+    int max_val = map->coords[0][0].value;
 
     for (int i = 0; i < map->num_rows; ++i) {
         for (int j = 0; j < map->num_cols; ++j) {
-            if (map->coords[i][j].value < minVal) {
-                minVal = map->coords[i][j].value;
+            if (map->coords[i][j].value < min_val) {
+                min_val = map->coords[i][j].value;
             }
-            if (map->coords[i][j].value > maxVal) {
-                maxVal = map->coords[i][j].value;
+            if (map->coords[i][j].value > max_val) {
+                max_val = map->coords[i][j].value;
             }
         }
     }
@@ -65,16 +64,17 @@ void colorize_points(t_img *img, t_map *map)
     for (int i = 0; i < map->num_rows; ++i) {
         for (int j = 0; j < map->num_cols; ++j) {
 
-            double factor = (double)(map->coords[i][j].value - minVal) / (maxVal - minVal);
+            double factor = (double)(map->coords[i][j].value - min_val) / (max_val - min_val);
+            // if (i == 0)
+            //     printf("Factor: %f\n", factor);
 
             map->coords[i][j].color.r = map->gradient[0].r + factor * (map->gradient[1].r -map->gradient[0].r);
             map->coords[i][j].color.g = map->gradient[0].g + factor * (map->gradient[1].g - map->gradient[0].g);
             map->coords[i][j].color.b  = map->gradient[0].b + factor * (map->gradient[1].b - map->gradient[0].b);
-            printf("R: %d\n", map->coords[i][j].color.r);
-            printf("G: %d\n", map->coords[i][j].color.g);
-            printf("B: %d\n", map->coords[i][j].color.b);
+            // printf("R: %d\n", map->coords[i][j].color.r);
+            // printf("G: %d\n", map->coords[i][j].color.g);
+            // printf("B: %d\n", map->coords[i][j].color.b);
             //printf("\n");
-            //printf("Color: %d\n", gradient_to_int(&map->coords[i][j].color));
         }
     }
 }
