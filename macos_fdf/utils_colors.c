@@ -3,8 +3,8 @@
 
 int is_dark(t_color color)
 {
-	int brightness = color.r * RED_COEFFICIENT + color.g * GREEN_COEFFICIENT + color.b * BLUE_COEFFICIENT;
-	return brightness < DARK_THRESHOLD;
+    int brightness = color.r * RED_COEFFICIENT + color.g * GREEN_COEFFICIENT + color.b * BLUE_COEFFICIENT;
+    return brightness < DARK_THRESHOLD;
 }
 
 t_color *gen_gradient(void)
@@ -29,15 +29,15 @@ t_color *gen_gradient(void)
 
 void print_gradient(t_color *gradient)
 {
-	if (gradient != NULL)
-	{
-		printf("Gradient 0: R - %d, G - %d, B - %d\n", gradient[0].r, gradient[0].g, gradient[0].b);
-		printf("Gradient 1: R - %d, G - %d, B - %d\n", gradient[1].r, gradient[1].g, gradient[1].b);
-	}
-	else
-	{
-		printf("Failed to generate gradient.\n");
-	}
+    if (gradient != NULL)
+    {
+        printf("Gradient 0: R - %d, G - %d, B - %d\n", gradient[0].r, gradient[0].g, gradient[0].b);
+        printf("Gradient 1: R - %d, G - %d, B - %d\n", gradient[1].r, gradient[1].g, gradient[1].b);
+    }
+    else
+    {
+        printf("Failed to generate gradient.\n");
+    }
 }
 
 int gradient_to_int(t_color *color)
@@ -50,31 +50,26 @@ void colorize_points(t_img *img, t_map *map)
     int min_val = map->coords[0][0].value;
     int max_val = map->coords[0][0].value;
 
-    for (int i = 0; i < map->num_rows; ++i) {
-        for (int j = 0; j < map->num_cols; ++j) {
-            if (map->coords[i][j].value < min_val) {
+    for (int i = 0; i < map->num_rows; ++i)
+    {
+        for (int j = 0; j < map->num_cols; ++j)
+        {
+            if (map->coords[i][j].value < min_val)
                 min_val = map->coords[i][j].value;
-            }
-            if (map->coords[i][j].value > max_val) {
+            if (map->coords[i][j].value > max_val)
                 max_val = map->coords[i][j].value;
-            }
         }
     }
 
-    for (int i = 0; i < map->num_rows; ++i) {
-        for (int j = 0; j < map->num_cols; ++j) {
-
+    for (int i = 0; i < map->num_rows; ++i)
+    {
+        for (int j = 0; j < map->num_cols; ++j)
+        {
             double factor = (double)(map->coords[i][j].value - min_val) / (max_val - min_val);
-            // if (i == 0)
-            //     printf("Factor: %f\n", factor);
-
-            map->coords[i][j].color.r = map->gradient[0].r + factor * (map->gradient[1].r -map->gradient[0].r);
+            //linear interpolation
+            map->coords[i][j].color.r = map->gradient[0].r + factor * (map->gradient[1].r - map->gradient[0].r);
             map->coords[i][j].color.g = map->gradient[0].g + factor * (map->gradient[1].g - map->gradient[0].g);
-            map->coords[i][j].color.b  = map->gradient[0].b + factor * (map->gradient[1].b - map->gradient[0].b);
-            // printf("R: %d\n", map->coords[i][j].color.r);
-            // printf("G: %d\n", map->coords[i][j].color.g);
-            // printf("B: %d\n", map->coords[i][j].color.b);
-            //printf("\n");
+            map->coords[i][j].color.b = map->gradient[0].b + factor * (map->gradient[1].b - map->gradient[0].b);
         }
     }
 }

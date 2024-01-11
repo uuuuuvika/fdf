@@ -20,20 +20,20 @@ void draw_l(t_img *img, int x1, int y1, int x2, int y2, t_color color1, t_color 
 	int sy = (y1 < y2) ? 1 : -1;
 	int err = dx - dy;
 	int err2;
+	int r, g, b, color;
+	double position;
 
 	while (!(x1 == x2 && y1 == y2))
 	{
 		if (x1 >= 0 && x1 <= WIDTH && y1 >= 0 && y1 <= HEIGHT)
 		{
-			double position = get_pix_position(x1_start, x2, y1_start, y2, x1, y1);
-
-			int r = round(color1.r * (1 - position) + color2.r * position);
-			int g = round(color1.g * (1 - position) + color2.g * position);
-			int b = round(color1.b * (1 - position) + color2.b * position);
-			int color = (r << 16) | (g << 8) | b;
+			position = get_pix_position(x1_start, x2, y1_start, y2, x1, y1);
+			r = round(color1.r * (1 - position) + color2.r * position);
+			g = round(color1.g * (1 - position) + color2.g * position);
+			b = round(color1.b * (1 - position) + color2.b * position);
+			color = (r << 16) | (g << 8) | b;
 			img_pix_put(img, x1, y1, color);
 		}
-
 		err2 = 2 * err;
 		if (err2 > -dy)
 		{
@@ -73,6 +73,7 @@ void draw_lines(t_img *img, t_map *map)
 				ny_next = map->coords[x + 1][y].y_iso + HEIGHT / 2;
 				t_color color_next = map->coords[x + 1][y].color;
 				draw_l(img, nx, ny, nx_next, ny_next, color, color_next);
+				// drawLine(img, nx, ny, nx_next, ny_next, color, color_next);
 			}
 			if (y < map->num_cols - 1)
 			{
@@ -80,6 +81,7 @@ void draw_lines(t_img *img, t_map *map)
 				ny_next = map->coords[x][y + 1].y_iso + HEIGHT / 2;
 				t_color color_next = map->coords[x][y + 1].color;
 				draw_l(img, nx, ny, nx_next, ny_next, color, color_next);
+				// drawLine(img, nx, ny, nx_next, ny_next, color, color_next);
 			}
 			y++;
 		}

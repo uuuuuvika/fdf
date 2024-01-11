@@ -115,6 +115,8 @@ int destroy_win_and_img(t_data *data);
 
 void draw_dots(t_img *img, t_map *map);
 
+void drawLine(t_img *img, int x0, int y0, int x1, int y1, t_color color1, t_color color2);
+
 
 
 #endif

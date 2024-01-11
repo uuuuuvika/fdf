@@ -22,7 +22,7 @@ void read_map(int fd, t_map *map)
 	map->num_rows = num_rows;
 	map->a_z = -135.00 / 180 * 3.14159;
 	map->a_x = -125.00 / 180 * 3.14159;
-	map->scale = 5.0;
+	map->scale = 25.0;
 	map->rotation_active = false;
 	malloc_for_z(map);
 	close(fd);
