@@ -1,10 +1,11 @@
 NAME=fdf
+
 CFLAGS= -Wextra -Wall -Werror -I/usr/local/include
 LIBFT= libs/the_libft/libft.a
 MLX = -L./libs/minilibx-linux -lmlx -lXext -lX11 -lm
 CC=cc
 
-SRCS = fdf.c keypress_handling.c utils_colors.c utils_image.c utils_map.c
+SRCS = fdf.c	utils_colors.c	user_controls.c	utils_image.c	utils_map.c draw.c utils_free.c utils_extra.c
 OBJS	:= ${SRCS:.c=.o}
 
 RM=rm -rf
