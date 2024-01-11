@@ -97,7 +97,7 @@ void colorize_points(t_img *img, t_map *map);
 
 double get_pix_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur);
 
-void img_pix_put(t_img *img, int x, int y, int color);
+void img_pix_put(t_img *img, int x, int y, unsigned int color);
 
 // map
 void read_map(int fd, t_map *map);

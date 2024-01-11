@@ -19,7 +19,7 @@
 //     }
 // }
 
-void	img_pix_put(t_img *img, int x, int y, int color)
+void	img_pix_put(t_img *img, int x, int y, unsigned int color)
 {
     char    *pixel;
 

@@ -22,7 +22,7 @@ void read_map(int fd, t_map *map)
 	map->num_rows = num_rows;
 	map->a_z = -135.00 / 180 * 3.14159;
 	map->a_x = -125.00 / 180 * 3.14159;
-	map->scale = 25.0;
+	map->scale = 45.0;
 	map->rotation_active = false;
 	malloc_for_z(map);
 	close(fd);
@@ -88,8 +88,8 @@ void cartesian_to_iso(t_map *map)
 			yy = (x - off_x) * sin(map->a_z) + (y - off_y) * cos(map->a_z);
 			yy = yy * cos(map->a_x) - z * sin(map->a_x);
 
-			printf("xx: %f, yy: %f\n", xx, yy);
-			printf("scale: %f\n", map->scale);
+			// printf("xx: %f, yy: %f\n", xx, yy);
+			// printf("scale: %f\n", map->scale);
 			
 			map->coords[x][y].x_iso = xx * map->scale;
 			map->coords[x][y].y_iso = yy * map->scale;
