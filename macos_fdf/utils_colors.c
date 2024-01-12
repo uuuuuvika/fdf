@@ -1,5 +1,4 @@
 #include "fdf.h"
-#include <stdio.h>
 
 int is_dark(t_color color)
 {
@@ -19,9 +18,11 @@ t_color *gen_gradient(void)
         gradients[0].r = rand() % 256;
         gradients[0].g = rand() % 256;
         gradients[0].b = rand() % 256;
+        //gradients[0].a = 1;
         gradients[1].r = rand() % 256;
         gradients[1].g = rand() % 256;
         gradients[1].b = rand() % 256;
+       // gradients[1].a = 1;
     } while (is_dark(gradients[0]) || is_dark(gradients[1]));
 
     return gradients;
@@ -31,8 +32,8 @@ void print_gradient(t_color *gradient)
 {
     if (gradient != NULL)
     {
-        printf("Gradient 0: R - %d, G - %d, B - %d\n", gradient[0].r, gradient[0].g, gradient[0].b);
-        printf("Gradient 1: R - %d, G - %d, B - %d\n", gradient[1].r, gradient[1].g, gradient[1].b);
+        printf("Gradient 0: R - %d, G - %d, B - %d\n", gradient[0].r, gradient[0].g);
+        printf("Gradient 1: R - %d, G - %d, B - %d\n", gradient[1].r, gradient[1].g);
     }
     else
     {
@@ -40,9 +41,9 @@ void print_gradient(t_color *gradient)
     }
 }
 
-int gradient_to_int(t_color *color)
+u_int32_t gradient_to_int(t_color *color)
 {
-    return (color->r << 16) | (color->g << 8) | color->b;
+    return (color->r << 24) | (color->g << 16) | color->b << 8 |  color->a;
 }
 
 void colorize_points(t_img *img, t_map *map)
@@ -70,6 +71,7 @@ void colorize_points(t_img *img, t_map *map)
             map->coords[i][j].color.r = map->gradient[0].r + factor * (map->gradient[1].r - map->gradient[0].r);
             map->coords[i][j].color.g = map->gradient[0].g + factor * (map->gradient[1].g - map->gradient[0].g);
             map->coords[i][j].color.b = map->gradient[0].b + factor * (map->gradient[1].b - map->gradient[0].b);
+            //map->coords[i][j].color.a = map->gradient[0].a + factor * (map->gradient[1].a - map->gradient[0].a);
         }
     }
 }

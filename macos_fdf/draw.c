@@ -21,7 +21,7 @@ void draw_l(t_img *img, int x1, int y1, int x2, int y2, t_color color1, t_color 
 	int sy = (y1 < y2) ? 1 : -1; // -1
 	int err = dx - dy; //0
 	int err2;
-	int r, g, b, color;
+	int r, g, b;
 	double position;
 	
 
@@ -33,20 +33,10 @@ void draw_l(t_img *img, int x1, int y1, int x2, int y2, t_color color1, t_color 
 			r = round(color1.r * (1 - position) + color2.r * position);
 			g = round(color1.g * (1 - position) + color2.g * position);
 			b = round(color1.b * (1 - position) + color2.b * position);
-			
 
-			// unsigned int color2 = (r << 24) | (g << 16) | (b << 8) | 78;
-			// img_pix_put(img, x1 + 1, y1, color2);
-			// img_pix_put(img, x1 - 1, y1, color2);
-
-			color = (r << 16) | (g << 8) | b;
+			int color = (r << 16) | (g << 8) | b;
 			img_pix_put(img, x1, y1, color);
 		}
-
-		
-		// prevX = x1;
-		// prevY = y1;
-
 
 		err2 = 2 * err; //0
 		if (err2 > -dy) //yes

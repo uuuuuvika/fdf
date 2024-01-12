@@ -43,6 +43,7 @@ typedef struct s_color
     int r;
     int g;
     int b;
+    int a;
 } t_color;
 
 typedef struct s_coords
@@ -92,12 +93,12 @@ void update_rotation(t_data  *data, double increment);
 int is_dark(t_color color);
 t_color *gen_gradient(void);
 void print_gradient(t_color *gradient);
-int gradient_to_int(t_color *color);
+u_int32_t gradient_to_int(t_color *color);
 void colorize_points(t_img *img, t_map *map);
 
 double get_pix_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur);
 
-void img_pix_put(t_img *img, int x, int y, unsigned int color);
+void img_pix_put(t_img *img, int x, int y, int color);
 
 // map
 void read_map(int fd, t_map *map);

@@ -28,9 +28,9 @@ void read_map(int fd, t_map *map)
 	close(fd);
 }
 
-void	malloc_for_z(t_map *map)
+void malloc_for_z(t_map *map)
 {
-	int	i;
+	int i;
 
 	map->coords = malloc(sizeof(t_coords *) * map->num_rows);
 	i = 0;
@@ -71,9 +71,11 @@ void cartesian_to_iso(t_map *map)
 	int x;
 	int y;
 	int z;
-
+	double xx;
+	double yy;
 	int off_x = map->num_rows / 2;
 	int off_y = map->num_cols / 2;
+	
 	x = 0;
 	while (x < map->num_rows)
 	{
@@ -81,16 +83,11 @@ void cartesian_to_iso(t_map *map)
 		while (y < map->num_cols)
 		{
 			z = map->coords[x][y].value;
-			double xx;
-			double yy;
-			//printf("off_x: %d, off_y: %d\n", off_x, off_y);
 			xx = (x - off_x) * cos(map->a_z) - (y - off_y) * sin(map->a_z);
-			yy = (x - off_x) * sin(map->a_z) + (y - off_y) * cos(map->a_z);
-			yy = yy * cos(map->a_x) - z * sin(map->a_x);
+			yy = ((x - off_x) * sin(map->a_z) + (y - off_y) * cos(map->a_z)) * cos(map->a_x) - z * sin(map->a_x);
 
 			// printf("xx: %f, yy: %f\n", xx, yy);
 			// printf("scale: %f\n", map->scale);
-			
 			map->coords[x][y].x_iso = xx * map->scale;
 			map->coords[x][y].y_iso = yy * map->scale;
 			y++;
