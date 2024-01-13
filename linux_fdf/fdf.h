@@ -27,6 +27,9 @@
 #define PURPLE_PIXEL 0xFF00FF
 #define MLX_ERROR 1
 
+static int xo;
+static int yo;
+
 typedef struct s_color
 {
     int r;
@@ -51,6 +54,7 @@ typedef struct s_map
     t_coords **coords;
     double scale;
     bool rotation_active;
+    bool translate_active;
     t_color *gradient; 
 } t_map;
 
@@ -74,8 +78,11 @@ typedef struct s_data
 } t_data;
 
 int handle_keypress(int key, t_data *data);
+int handle_mouse(int button, int x, int y, t_data *data);
 void update_angle(double *angle, int old_position, int new_position, double increment);
 void update_rotation(t_data  *data, double increment);
+void translate(t_data *data, double increment);
+void update_iso(int *iso, int old_position, int new_position, double increment);
 
 int is_dark(t_color color);
 t_color *gen_gradient(void);
@@ -86,7 +93,7 @@ void colorize_points(t_map *map);
 void img_pix_put(t_img *img, int x, int y, int color);
 
 // map
-void read_map(int fd, t_map *map);
+int read_map(int fd, t_map *map);
 void malloc_for_z(t_map *map);
 void fill_z(int fd, t_map *map);
 void free_arr2D(char **arr2D);

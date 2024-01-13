@@ -1,6 +1,6 @@
 #include "fdf.h"
 
-void read_map(int fd, t_map *map)
+int read_map(int fd, t_map *map)
 {
 	int num_rows;
 	int num_cols;
@@ -8,6 +8,8 @@ void read_map(int fd, t_map *map)
 	char **cols;
 
 	num_rows = 0;
+	if (fd < 0)
+		return (1);
 	while ((line = get_next_line(fd)) != NULL)
 	{
 		num_rows++;
@@ -24,8 +26,10 @@ void read_map(int fd, t_map *map)
 	map->a_x = -125.00 / 180 * 3.14159;
 	map->scale = 25.0;
 	map->rotation_active = false;
+	map->translate_active = false;
 	malloc_for_z(map);
 	close(fd);
+	return (0);
 }
 
 void malloc_for_z(t_map *map)
