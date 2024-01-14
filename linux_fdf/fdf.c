@@ -5,24 +5,27 @@ int render(t_data *data)
 	static double last_a_z;
 	static double last_a_x;
 	static double last_scale;
-	// static double last_iso_x;
-	// static double last_iso_y;
+	static int last_move_x;
+	static int last_move_y;
 
 	if (data->win_ptr == NULL)
 		return (MLX_ERROR);
 
-	update_rotation(data, 0.03);
-	//translate(data, 0.03);
+	rotate(data, 0.05);
+	translate(data);
 
-	if (last_a_z != data->map.a_z || last_a_x != data->map.a_x || last_scale != data->map.scale || data->map.translate_active)
+	if (last_a_z != data->map.a_z || last_a_x != data->map.a_x || last_scale != data->map.scale || last_move_x != data->map.move_x || last_move_y != data->map.move_y)
 	{
 		mlx_destroy_image(data->mlx_ptr, data->img.mlx_img);
-		data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIDTH * 4, HEIGHT * 4);
+		data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIDTH, HEIGHT);
+		data->img.addr = mlx_get_data_addr(data->img.mlx_img, &data->img.bpp, &data->img.line_len, &data->img.endian);
 		cartesian_to_iso(&data->map);
-		draw_lines(&data->img, &data->map);
+		draw_lines(&data->img, &data->map, data->map.move_x, data->map.move_y);
 		last_a_z = data->map.a_z;
 		last_a_x = data->map.a_x;
 		last_scale = data->map.scale;
+		last_move_x = data->map.move_x;
+		last_move_y = data->map.move_y;
 		mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
 	}
 	return (0);
@@ -32,11 +35,10 @@ int main(int argc, char **argv)
 {
 	static t_data data; //???
 	t_color *gradient = gen_gradient();
-	char *map_name;
 
 	if (argc != 2)
 	{
-		printf("WRONG MAP OR NO MAP :(\n");
+		printf("NO MAP :(\n");
 		return (MLX_ERROR);
 	}
 	if (gradient == NULL)
@@ -55,30 +57,16 @@ int main(int argc, char **argv)
 		return (MLX_ERROR);
 	}
 
-	data.img.mlx_img = mlx_new_image(data.mlx_ptr, WIDTH * 4, HEIGHT * 4);
+	data.img.mlx_img = mlx_new_image(data.mlx_ptr, WIDTH, HEIGHT);
 	data.img.addr = mlx_get_data_addr(data.img.mlx_img, &data.img.bpp, &data.img.line_len, &data.img.endian);
 	data.map.gradient = gradient;
 
-	map_name = ft_strjoin("maps/", argv[1]);
-	map_name = ft_spec_strjoin(map_name, ".fdf");
-
-	if (read_map(open(map_name, O_RDONLY), &data.map) != 0)
-	{
-		free(map_name);
-		free(gradient);
-		printf("WRONG MAP :(\n");
-		destroy_win_and_img(&data);
-	}
-
-	fill_z(open(map_name, O_RDONLY), &data.map);
-	free(map_name);
-
-	colorize_points(&data.map);
+	create_map(argv[1], &data, gradient);
 
 	cartesian_to_iso(&data.map);
 
-	// draw_dots(&data.img, &data.map);
-	draw_lines(&data.img, &data.map);
+	draw_lines(&data.img, &data.map, data.map.move_x, data.map.move_y);
+
 
 	print_gradient(data.map.gradient);
 

@@ -60,7 +60,13 @@ void fill_z(int fd, t_map *map)
 		num_values = 0;
 		while (values[num_values] != NULL && values[num_values][0] != '\n')
 		{
-			map->coords[i][num_values].value = ft_atoi(values[num_values]);
+			char **all_pack = ft_split(values[num_values], ',');
+			if (all_pack[1] != NULL)
+				map->coords[i][num_values].color = hex_to_color(all_pack[1]);
+			else
+				map->coords[i][num_values].color = map->gradient[2];
+			map->coords[i][num_values].value = ft_atoi(all_pack[0]);
+			free_arr2D(all_pack);
 			num_values++;
 		}
 		i++;
@@ -91,13 +97,28 @@ void cartesian_to_iso(t_map *map)
 			yy = (x - off_x) * sin(map->a_z) + (y - off_y) * cos(map->a_z);
 			yy = yy * cos(map->a_x) - z * sin(map->a_x);
 
-			// printf("xx: %f, yy: %f\n", xx, yy);
-			// printf("scale: %f\n", map->scale);
-
-			map->coords[x][y].x_iso = xx * map->scale;
-			map->coords[x][y].y_iso = yy * map->scale;
+			map->coords[x][y].x_iso = xx * map->scale + map->move_x;
+			map->coords[x][y].y_iso = yy * map->scale + map->move_y;
 			y++;
 		}
 		x++;
 	}
+}
+
+void create_map(char *argv, t_data *data, t_color *gradient)
+{
+	char *map_name;
+
+	map_name = ft_strjoin("maps/", argv);
+	map_name = ft_spec_strjoin(map_name, ".fdf");
+	if (read_map(open(map_name, O_RDONLY), &data->map) != 0)
+	{
+		free(map_name);
+		free(gradient);
+		printf("WRONG MAP :(\n");
+		destroy_win_and_img(data);
+	}
+	fill_z(open(map_name, O_RDONLY), &data->map);
+	//colorize_points(&data->map);
+	free(map_name);
 }

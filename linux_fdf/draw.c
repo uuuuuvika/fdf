@@ -47,7 +47,7 @@ void draw_l(t_img *img, int x1, int y1, int x2, int y2, t_color color1, t_color 
 	}
 }
 
-void draw_lines(t_img *img, t_map *map)
+void draw_lines(t_img *img, t_map *map, int move_x, int move_y)
 {
 	int x;
 	int y;
@@ -55,6 +55,8 @@ void draw_lines(t_img *img, t_map *map)
 	double ny_next;
 	double nx;
 	double ny;
+	(void)move_x;
+	(void)move_y;
 
 	x = 0;
 	while (x < map->num_rows)
@@ -62,26 +64,23 @@ void draw_lines(t_img *img, t_map *map)
 		y = 0;
 		while (y < map->num_cols)
 		{
-			nx = map->coords[x][y].x_iso + WIDTH / 2 + xo;
-			ny = map->coords[x][y].y_iso + HEIGHT / 2 + yo;
+			nx = map->coords[x][y].x_iso + (WIDTH / 2);
+			ny = map->coords[x][y].y_iso + (HEIGHT / 2);
 			t_color color = map->coords[x][y].color;
 
 			if (x < map->num_rows - 1)
 			{
-				nx_next = map->coords[x + 1][y].x_iso + WIDTH / 2 + xo;
-				ny_next = map->coords[x + 1][y].y_iso + HEIGHT / 2 + yo;
-				//printf("nx: %f, ny: %f, nx_next: %f, ny_next: %f\n", nx, ny, nx_next, ny_next);
+				nx_next = map->coords[x + 1][y].x_iso + (WIDTH / 2);
+				ny_next = map->coords[x + 1][y].y_iso + (HEIGHT / 2);
 				t_color color_next = map->coords[x + 1][y].color;
 				draw_l(img, nx, ny, nx_next, ny_next, color, color_next);
-				// drawLine(img, nx, ny, nx_next, ny_next, color, color_next);
 			}
 			if (y < map->num_cols - 1)
 			{
-				nx_next = map->coords[x][y + 1].x_iso + WIDTH / 2 + xo;
-				ny_next = map->coords[x][y + 1].y_iso + HEIGHT / 2 + yo;
+				nx_next = map->coords[x][y + 1].x_iso + (WIDTH / 2);
+				ny_next = map->coords[x][y + 1].y_iso + (HEIGHT / 2);
 				t_color color_next = map->coords[x][y + 1].color;
 				draw_l(img, nx, ny, nx_next, ny_next, color, color_next);
-				// drawLine(img, nx, ny, nx_next, ny_next, color, color_next);
 			}
 			y++;
 		}
