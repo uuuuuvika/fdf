@@ -10,6 +10,14 @@ int handle_keypress(int key, t_data *data)
 		data->map.scale -= 0.5;
 	if (key == SPACE)
 		data->map.rotation_active = !data->map.rotation_active;
+	if (key == KEY_LEFT)
+		data->map.move_x -= 10;
+	if (key == KEY_RIGHT)
+		data->map.move_x += 10;
+	// 	data->move_x -= 100;
+	// if (key == KEY_RIGHT)
+	// 	data->move_x += 100;
+
 	return (0);
 }
 

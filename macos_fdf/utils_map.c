@@ -1,12 +1,13 @@
 #include "fdf.h"
 
-void read_map(int fd, t_map *map)
+int read_map(int fd, t_map *map)
 {
 	int num_rows;
 	int num_cols;
 	char *line;
 	char **cols;
-
+	if (fd < 0)
+		return (1);
 	num_rows = 0;
 	while ((line = get_next_line(fd)) != NULL)
 	{
@@ -22,10 +23,11 @@ void read_map(int fd, t_map *map)
 	map->num_rows = num_rows;
 	map->a_z = -135.00 / 180 * 3.14159;
 	map->a_x = -125.00 / 180 * 3.14159;
-	map->scale = 45.0;
+	map->scale = 25.0;
 	map->rotation_active = false;
 	malloc_for_z(map);
 	close(fd);
+	return (0);
 }
 
 void malloc_for_z(t_map *map)

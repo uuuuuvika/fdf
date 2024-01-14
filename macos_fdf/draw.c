@@ -49,26 +49,10 @@ void draw_l(t_img *img, int x1, int y1, int x2, int y2, t_color color1, t_color 
 			err += dx; // -5 + 5 = 0
 			y1 += sy; // y1 -1 = 4
 		}
-		// if (prevX != x1 && prevY != y1)
-		// {
-		// 	color = (r << 24) | (g << 16) | (b << 8) | 128;
-		// 	img_pix_put(img, prevX + sx, prevY, color);
-		// 	img_pix_put(img, prevX, prevY + sy, color);
-
-		// 	printf("prevX: %d, x1: %d\n", prevX, x1);
-
-		// 	printf("prevY: %d, y1: %d\n", prevY, y1);
-
-		
-		// }
-		// else if (prevX != x1 && prevY == y1)
-		// 	img_pix_put(img, x1, prevY, color);
-		// else if (prevY != y1)
-		// 	img_pix_put(img, prevX, y1, color);
 	}
 }
 
-void draw_lines(t_img *img, t_map *map)
+void draw_lines(t_img *img, t_map *map, int move_x, int move_y)
 {
 	int x;
 	int y;
@@ -83,26 +67,23 @@ void draw_lines(t_img *img, t_map *map)
 		y = 0;
 		while (y < map->num_cols)
 		{
-			nx = map->coords[x][y].x_iso + WIDTH / 2;
-			ny = map->coords[x][y].y_iso + HEIGHT / 2;
+			nx = map->coords[x][y].x_iso + (WIDTH / 2 + move_x);
+			ny = map->coords[x][y].y_iso + (HEIGHT / 2 + move_y);
 			t_color color = map->coords[x][y].color;
 
 			if (x < map->num_rows - 1)
 			{
-				nx_next = map->coords[x + 1][y].x_iso + WIDTH / 2;
-				ny_next = map->coords[x + 1][y].y_iso + HEIGHT / 2;
-				//printf("nx: %f, ny: %f, nx_next: %f, ny_next: %f\n", nx, ny, nx_next, ny_next);
+				nx_next = map->coords[x + 1][y].x_iso + (WIDTH / 2 + move_x);
+				ny_next = map->coords[x + 1][y].y_iso + (HEIGHT / 2 + move_y);
 				t_color color_next = map->coords[x + 1][y].color;
 				draw_l(img, nx, ny, nx_next, ny_next, color, color_next);
-				// drawLine(img, nx, ny, nx_next, ny_next, color, color_next);
 			}
 			if (y < map->num_cols - 1)
 			{
-				nx_next = map->coords[x][y + 1].x_iso + WIDTH / 2;
-				ny_next = map->coords[x][y + 1].y_iso + HEIGHT / 2;
+				nx_next = map->coords[x][y + 1].x_iso + (WIDTH / 2 + move_x);
+				ny_next = map->coords[x][y + 1].y_iso + (HEIGHT / 2 + move_y);
 				t_color color_next = map->coords[x][y + 1].color;
 				draw_l(img, nx, ny, nx_next, ny_next, color, color_next);
-				// drawLine(img, nx, ny, nx_next, ny_next, color, color_next);
 			}
 			y++;
 		}

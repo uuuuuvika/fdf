@@ -38,6 +38,9 @@
 #define KEY_S 1
 #define SPACE 49
 
+// static int move_x;
+// static int move_y;
+
 typedef struct s_color
 {
     int r;
@@ -63,6 +66,8 @@ typedef struct s_map
     t_coords **coords;
     double scale;
     bool rotation_active;
+    int move_x;
+    int move_y;
     t_color *gradient; 
 } t_map;
 
@@ -83,6 +88,8 @@ typedef struct s_data
     int mouse_y;
     t_img img;
     t_map map;
+    // int move_x;
+    // int move_y;
 } t_data;
 
 int handle_keypress(int key, t_data *data);
@@ -101,22 +108,20 @@ double get_pix_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur);
 void img_pix_put(t_img *img, int x, int y, int color);
 
 // map
-void read_map(int fd, t_map *map);
+int read_map(int fd, t_map *map);
 void malloc_for_z(t_map *map);
 void fill_z(int fd, t_map *map);
 void free_arr2D(char **arr2D);
 void cartesian_to_iso(t_map *map);
 
-// void draw_base_line(t_img *img, t_map *map, int x1, int y1, int x2, int y2);
-// void draw_far_line(t_img *img, t_map *map, int x1, int y1, int x2, int y2);
-// void draw_line(t_img *img, t_map *map, int x1, int y1, int x2, int y2);
-void draw_lines(t_img *img, t_map *map);
+
+void draw_lines(t_img *img, t_map *map, int move_x, int move_y);
 
 int destroy_win_and_img(t_data *data);
 
 void draw_dots(t_img *img, t_map *map);
 
-void drawLine(t_img *img, int x0, int y0, int x1, int y1, t_color color1, t_color color2);
+//void drawLine(t_img *img, int x0, int y0, int x1, int y1, t_color color1, t_color color2);
 
 
 
