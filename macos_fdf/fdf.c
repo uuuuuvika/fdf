@@ -11,7 +11,8 @@ int render(t_data *data)
 	if (data->win_ptr == NULL)
 		return (MLX_ERROR);
 
-	update_rotation(data, 0.03);
+	rotate(data, 0.05);
+	translate(data);
 
 	if (last_a_z != data->map.a_z || last_a_x != data->map.a_x || last_scale != data->map.scale || last_move_x != data->map.move_x || last_move_y != data->map.move_y)
 	{
@@ -20,7 +21,7 @@ int render(t_data *data)
 		data->img.addr = mlx_get_data_addr(data->img.mlx_img, &data->img.bpp, &data->img.line_len, &data->img.endian);
 		cartesian_to_iso(&data->map);
 		//draw_dots(&data->img, &data->map);
-		draw_lines(&data->img, &data->map, data->map.move_x, data->map.move_y);
+		draw_lines(&data->img, &data->map);
 		last_a_z = data->map.a_z;
 		last_a_x = data->map.a_x;
 		last_scale = data->map.scale;
@@ -35,7 +36,6 @@ int main(int argc, char **argv)
 {
 	static t_data data; //???
 	t_color *gradient = gen_gradient();
-	char *map_name;
 
 	if (argc != 2)
 	{
@@ -62,31 +62,17 @@ int main(int argc, char **argv)
 	data.img.addr = mlx_get_data_addr(data.img.mlx_img, &data.img.bpp, &data.img.line_len, &data.img.endian);
 	data.map.gradient = gradient;
 
-	map_name = ft_strjoin("maps/", argv[1]);
-	map_name = ft_spec_strjoin(map_name, ".fdf");
-
-	if (read_map(open(map_name, O_RDONLY), &data.map) != 0)
-	{
-		free(map_name);
-		free(gradient);
-		printf("WRONG MAP :(\n");
-		destroy_win_and_img(&data);
-	}
-
-	fill_z(open(map_name, O_RDONLY), &data.map);
-	free(map_name);
-
-	colorize_points(&data.img, &data.map);
-	
+	create_map(argv[1], &data, gradient);
 	cartesian_to_iso(&data.map);
 
 	//draw_dots(&data.img, &data.map);
-	draw_lines(&data.img, &data.map, &data.map.move_x, &data.map.move_y);
+	draw_lines(&data.img, &data.map);
 
 	print_gradient(data.map.gradient);
 
 	mlx_loop_hook(data.mlx_ptr, &render, &data);
 	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, &handle_keypress, &data);
+	mlx_mouse_hook(data.win_ptr, &handle_mousepress, &data);
 
 	mlx_loop(data.mlx_ptr);
 

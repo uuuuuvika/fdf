@@ -10,14 +10,17 @@ int handle_keypress(int key, t_data *data)
 		data->map.scale -= 0.5;
 	if (key == SPACE)
 		data->map.rotation_active = !data->map.rotation_active;
-	if (key == KEY_LEFT)
-		data->map.move_x -= 10;
-	if (key == KEY_RIGHT)
-		data->map.move_x += 10;
-	// 	data->move_x -= 100;
-	// if (key == KEY_RIGHT)
-	// 	data->move_x += 100;
+	return (0);
+}
 
+int handle_mousepress(int button, int x, int y, t_data *data)
+{
+	if (button == 1)
+	{
+		data->mouse_x = x;
+		data->mouse_y = y;
+		data->map.translate_active = !data->map.translate_active;
+	}
 	return (0);
 }
 
@@ -27,31 +30,50 @@ void get_mouse_position(int *x, int *y)
 	CGPoint mouseLoc = CGEventGetLocation(event);
 	*x = (int)mouseLoc.x;
 	*y = (int)mouseLoc.y;
-	//printf("Mouse location: %f %f\n", mouseLoc.x, mouseLoc.y);
+	// printf("Mouse location: %f %f\n", mouseLoc.x, mouseLoc.y);
 	CFRelease(event);
 }
 
-void update_angle(double *angle, int old_position, int new_position, double increment)
+void update_visuals(double *param, int old_position, int new_position, double increment)
 {
 	if (new_position > old_position)
-		*angle -= increment;
+		*param += increment;
 	else if (new_position < old_position)
-		*angle += increment;
+		*param -= increment;
 }
 
-void update_rotation(t_data  *data, double increment)
+void update_visuals2(int *param, int old_position, int new_position)
 {
-    static int mouse_x;
-    static int mouse_y;
-
-    if (!data->map.rotation_active)
-        return ;
-		
-    get_mouse_position(&mouse_x, &mouse_y);
-    update_angle(&data->map.a_z, data->mouse_x, mouse_x, increment);
-    update_angle(&data->map.a_x, data->mouse_y, mouse_y, increment);
-    data->mouse_x = mouse_x;
-    data->mouse_y = mouse_y;
+	if (new_position > old_position)
+		*param += new_position - old_position;
+	else if (new_position < old_position)
+		*param -= old_position - new_position;
 }
 
+void rotate(t_data *data, double increment)
+{
+	static int mouse_x;
+	static int mouse_y;
 
+	if (!data->map.rotation_active)
+		return;
+	get_mouse_position(&mouse_x, &mouse_y);
+	update_visuals(&data->map.a_z, data->mouse_x, mouse_x, increment);
+	update_visuals(&data->map.a_x, data->mouse_y, mouse_y, increment);
+	data->mouse_x = mouse_x;
+	data->mouse_y = mouse_y;
+}
+
+void translate(t_data *data)
+{
+	static int mouse_x;
+	static int mouse_y;
+
+	if (!data->map.translate_active)
+		return;
+	get_mouse_position(&mouse_x, &mouse_y);
+	update_visuals2(&data->map.move_x, data->mouse_x, mouse_x);
+	update_visuals2(&data->map.move_y, data->mouse_y, mouse_y);
+	data->mouse_x = mouse_x;
+	data->mouse_y = mouse_y;
+}

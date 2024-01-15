@@ -38,15 +38,11 @@
 #define KEY_S 1
 #define SPACE 49
 
-// static int move_x;
-// static int move_y;
-
 typedef struct s_color
 {
     int r;
     int g;
     int b;
-    int a;
 } t_color;
 
 typedef struct s_coords
@@ -66,9 +62,11 @@ typedef struct s_map
     t_coords **coords;
     double scale;
     bool rotation_active;
+    bool translate_active;
     int move_x;
     int move_y;
     t_color *gradient; 
+    bool has_color;
 } t_map;
 
 typedef struct s_img
@@ -88,22 +86,23 @@ typedef struct s_data
     int mouse_y;
     t_img img;
     t_map map;
-    // int move_x;
-    // int move_y;
 } t_data;
 
-int handle_keypress(int key, t_data *data);
+
 void get_mouse_position(int *x, int *y);
-void update_angle(double *angle, int old_position, int new_position, double increment);
-void update_rotation(t_data  *data, double increment);
+int handle_mousepress(int button, int x, int y, t_data *data);
+int handle_keypress(int key, t_data *data);
+
+
+void rotate(t_data *data, double increment);
+void translate(t_data *data);
+void update_visuals(double *param, int old_position, int new_position, double increment);
 
 int is_dark(t_color color);
 t_color *gen_gradient(void);
 void print_gradient(t_color *gradient);
-u_int32_t gradient_to_int(t_color *color);
-void colorize_points(t_img *img, t_map *map);
-
-double get_pix_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur);
+int gradient_to_int(t_color *color);
+void colorize_points(t_map *map);
 
 void img_pix_put(t_img *img, int x, int y, int color);
 
@@ -113,16 +112,17 @@ void malloc_for_z(t_map *map);
 void fill_z(int fd, t_map *map);
 void free_arr2D(char **arr2D);
 void cartesian_to_iso(t_map *map);
+void create_map(char *argv, t_data *data, t_color *gradient);
 
+// draw
+double get_pix_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur);
+void draw_l(t_img *img, int x1, int y1, int x2, int y2, t_color color1, t_color color2);
+void draw_lines(t_img *img, t_map *map);
 
-void draw_lines(t_img *img, t_map *map, int move_x, int move_y);
 
 int destroy_win_and_img(t_data *data);
-
+t_color hex_to_color(char *hex);
 void draw_dots(t_img *img, t_map *map);
 
-//void drawLine(t_img *img, int x0, int y0, int x1, int y1, t_color color1, t_color color2);
-
-
-
 #endif
+
