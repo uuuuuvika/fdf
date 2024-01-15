@@ -20,7 +20,7 @@ int render(t_data *data)
 		data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIDTH, HEIGHT);
 		data->img.addr = mlx_get_data_addr(data->img.mlx_img, &data->img.bpp, &data->img.line_len, &data->img.endian);
 		cartesian_to_iso(&data->map);
-		draw_lines(&data->img, &data->map, data->map.move_x, data->map.move_y);
+		draw_lines(&data->img, &data->map);
 		last_a_z = data->map.a_z;
 		last_a_x = data->map.a_x;
 		last_scale = data->map.scale;
@@ -65,7 +65,7 @@ int main(int argc, char **argv)
 
 	cartesian_to_iso(&data.map);
 
-	draw_lines(&data.img, &data.map, data.map.move_x, data.map.move_y);
+	draw_lines(&data.img, &data.map);
 
 
 	print_gradient(data.map.gradient);

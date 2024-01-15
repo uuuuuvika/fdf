@@ -27,8 +27,6 @@
 #define PURPLE_PIXEL 0xFF00FF
 #define MLX_ERROR 1
 
-static int xo;
-static int yo;
 
 typedef struct s_color
 {
@@ -55,8 +53,8 @@ typedef struct s_map
     double scale;
     bool rotation_active;
     bool translate_active;
-    double move_x;
-    double move_y;
+    int move_x;
+    int move_y;
     t_color *gradient; 
 } t_map;
 
@@ -105,7 +103,7 @@ void create_map(char *argv, t_data *data, t_color *gradient);
 // draw
 double get_pix_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur);
 void draw_l(t_img *img, int x1, int y1, int x2, int y2, t_color color1, t_color color2);
-void draw_lines(t_img *img, t_map *map, int move_x, int move_y);
+void draw_lines(t_img *img, t_map *map);
 
 
 int destroy_win_and_img(t_data *data);

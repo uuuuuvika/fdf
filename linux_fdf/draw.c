@@ -47,7 +47,7 @@ void draw_l(t_img *img, int x1, int y1, int x2, int y2, t_color color1, t_color 
 	}
 }
 
-void draw_lines(t_img *img, t_map *map, int move_x, int move_y)
+void draw_lines(t_img *img, t_map *map)
 {
 	int x;
 	int y;
@@ -55,8 +55,6 @@ void draw_lines(t_img *img, t_map *map, int move_x, int move_y)
 	double ny_next;
 	double nx;
 	double ny;
-	(void)move_x;
-	(void)move_y;
 
 	x = 0;
 	while (x < map->num_rows)
