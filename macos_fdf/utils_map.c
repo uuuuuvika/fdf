@@ -24,6 +24,7 @@ int read_map(int fd, t_map *map)
 	map->a_z = -135.00 / 180 * 3.14159;
 	map->a_x = -125.00 / 180 * 3.14159;
 	map->scale = 25.0;
+	map->descale_z = 1.0;
 	map->rotation_active = false;
 	map->translate_active = false;
 	malloc_for_z(map);
@@ -94,7 +95,7 @@ void cartesian_to_iso(t_map *map)
 		y = 0;
 		while (y < map->num_cols)
 		{
-			z = map->coords[x][y].value;
+			z = map->coords[x][y].value * map->descale_z;
 			xx = (x - off_x) * cos(map->a_z) - (y - off_y) * sin(map->a_z);
 			yy = (x - off_x) * sin(map->a_z) + (y - off_y) * cos(map->a_z);
 			yy = yy * cos(map->a_x) - z * sin(map->a_x);

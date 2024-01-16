@@ -7,6 +7,7 @@ int render(t_data *data)
 	static double last_scale;
 	static int last_move_x;
 	static int last_move_y;
+	static int last_descale_z;
 
 	if (data->win_ptr == NULL)
 		return (MLX_ERROR);
@@ -14,7 +15,7 @@ int render(t_data *data)
 	rotate(data, 0.05);
 	translate(data);
 
-	if (last_a_z != data->map.a_z || last_a_x != data->map.a_x || last_scale != data->map.scale || last_move_x != data->map.move_x || last_move_y != data->map.move_y)
+	if (last_a_z != data->map.a_z || last_a_x != data->map.a_x || last_scale != data->map.scale || last_move_x != data->map.move_x || last_move_y != data->map.move_y || last_descale_z != data->map.descale_z)
 	{
 		mlx_destroy_image(data->mlx_ptr, data->img.mlx_img);
 		data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIDTH, HEIGHT);
@@ -27,6 +28,7 @@ int render(t_data *data)
 		last_scale = data->map.scale;
 		last_move_x = data->map.move_x;
 		last_move_y = data->map.move_y;
+		last_descale_z = data->map.descale_z;
 		mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
 	}
 	return (0);
@@ -72,7 +74,7 @@ int main(int argc, char **argv)
 
 	mlx_loop_hook(data.mlx_ptr, &render, &data);
 	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, &handle_keypress, &data);
-	mlx_mouse_hook(data.win_ptr, &handle_mousepress, &data);
+	//mlx_mouse_hook(data.win_ptr, &handle_mousepress, &data);
 
 	mlx_loop(data.mlx_ptr);
 

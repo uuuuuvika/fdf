@@ -36,6 +36,8 @@
 #define KEY_RIGHT 124
 #define KEY_W 13
 #define KEY_S 1
+#define KEY_D 2
+#define KEY_A 0
 #define SPACE 49
 
 typedef struct s_color
@@ -61,6 +63,7 @@ typedef struct s_map
     double a_x;
     t_coords **coords;
     double scale;
+    double descale_z;
     bool rotation_active;
     bool translate_active;
     int move_x;
