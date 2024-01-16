@@ -12,6 +12,7 @@ int handle_keypress(int key, t_data *data)
 		data->map.rotation_active = !data->map.rotation_active;
 	if (key == KEY_A)
 	{
+		get_mouse_position(&data->mouse_x, &data->mouse_y);
 		data->map.translate_active = !data->map.translate_active;
 	}
 	if (key == KEY_D)
@@ -97,9 +98,9 @@ void translate(t_data *data)
 {
 	if (!data->map.translate_active)
 		return;
+
 	static int mouse_x;
 	static int mouse_y;
-	printf("mouse_x: %d\n", mouse_x);
 	get_mouse_position(&mouse_x, &mouse_y);
 	update_visuals2(&data->map.move_x, data->mouse_x, mouse_x);
 	update_visuals2(&data->map.move_y, data->mouse_y, mouse_y);
