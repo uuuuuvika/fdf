@@ -60,14 +60,11 @@ void fill_z(int fd, t_map *map)
 		while (values[num_values] != NULL && values[num_values][0] != '\n')
 		{
 			char **all_pack = ft_split(values[num_values], ',');
-			if (all_pack[1] != NULL)
-			{
-				map->has_color = true;
-				map->coords[i][num_values].color = hex_to_color(all_pack[1]);
-			//	printf("color: %d, %d, %d\n", map->coords[i][num_values].color.r, map->coords[i][num_values].color.g, map->coords[i][num_values].color.b);
-			}
-			// else
-			// 	map->coords[i][num_values].color = map->gradient[2];
+			// if (all_pack[1] != NULL)
+			// {
+			// 	map->has_color = true;
+			// 	map->coords[i][num_values].color = hex_to_color(all_pack[1]);
+			// }
 			map->coords[i][num_values].value = ft_atoi(all_pack[0]);
 			free_arr2D(all_pack);
 			num_values++;
@@ -119,12 +116,11 @@ void create_map(char *argv, t_data *data, t_color *gradient)
 	{
 		free(map_name);
 		free(gradient);
-		printf("WRONG MAP :(\n");
+		printf("WRONG MAP! :(\n");
 		destroy_win_and_img(data);
 	}
 	fill_z(open(map_name, O_RDONLY), &data->map);
 	if (data->map.has_color == false)
 		colorize_points(&data->map);
-	//colorize_points(&data->map);
 	free(map_name);
 }

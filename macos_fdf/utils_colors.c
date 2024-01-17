@@ -21,9 +21,6 @@ t_color *gen_gradient(void)
     gradients[1].r = rand() % 256;
     gradients[1].g = rand() % 256;
     gradients[1].b = rand() % 256;
-    // gradients[2].r = 200;
-    // gradients[2].g = 200;
-    // gradients[2].b = 200;
     //} while (is_dark(gradients[0]) || is_dark(gradients[1]));
     return (gradients);
 }
