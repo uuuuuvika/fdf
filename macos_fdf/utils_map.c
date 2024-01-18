@@ -23,7 +23,7 @@ int read_map(int fd, t_map *map)
 	map->num_rows = num_rows;
 	map->a_z = -135.00 / 180 * 3.14159;
 	map->a_x = -125.00 / 180 * 3.14159;
-	map->scale = 25.0;
+	map->scale = 45.0;
 	map->descale_z = 1.0;
 	map->rotation_active = false;
 	map->translate_active = false;
@@ -95,8 +95,8 @@ void cartesian_to_iso(t_map *map)
 			z = map->coords[x][y].value * map->descale_z;
 			xx = (x - off_x) * cos(map->a_z) - (y - off_y) * sin(map->a_z);
 			yy = ((x - off_x) * sin(map->a_z) + (y - off_y) * cos(map->a_z)) * cos(map->a_x) - z * sin(map->a_x);
-			//yy = yy * cos(map->a_x) - z * sin(map->a_x);
-			map->coords[x][y].r = sqrt(xx * xx + yy * yy + z * z);
+			// yy = yy * cos(map->a_x) - z * sin(map->a_x);
+			//map->coords[x][y].r = sqrt(xx * xx + yy * yy + z * z);
 			map->coords[x][y].x_iso = xx * map->scale + map->move_x;
 			map->coords[x][y].y_iso = yy * map->scale + map->move_y;
 			y++;
@@ -107,10 +107,12 @@ void cartesian_to_iso(t_map *map)
 
 void cartesian_to_spherical(t_map *map)
 {
-	t_spherical result;
+	// t_spherical result;
 	int x;
 	int y;
-	int z;
+	// int z;
+	int off_x = map->num_rows / 2;
+	int off_y = map->num_cols / 2;
 
 	x = 0;
 	while (x < map->num_rows)
@@ -118,26 +120,17 @@ void cartesian_to_spherical(t_map *map)
 		y = 0;
 		while (y < map->num_cols)
 		{
-			z = map->coords[x][y].value * map->descale_z;
-			int xx = x * map->scale;
-			int yy = y * map->scale;
-			int zz = z * map->scale;
-			//polar coordinates of x and y
-			result.r = sqrt(xx * xx + yy * y + zz * zz);
-			result.theta = atan2(yy, xx) * 180 / 3.14159;
-			result.phi = atan2(sqrt(xx * xx + yy * yy), zz) * 180 / 3.14159;				
-			printf
-			(
-				"x: %i, y: %i, r: %f, theta: %f\n",
-				x,
-				y,
-				result.r,
-				result.theta
-			);
+			double xx = sin(3.14159 * x / map->num_rows) * cos(2 * 3.14159 * y / map->num_cols);
+			double yy = sin(3.14159 * x / map->num_rows) * sin(2 * 3.14159 * y / map->num_cols);
+			double zz = cos(3.14159 * x / map->num_rows);
 
-			map->coords[x][y].r = result.r;
-			map->coords[x][y].theta = result.theta;
-			map->coords[x][y].phi = result.phi;
+			//int z = map->coords[x][y].value * map->descale_z;
+
+			xx = (xx) * cos(map->a_z) - (yy) * sin(map->a_z);
+			yy = ((xx) * sin(map->a_z) + (yy) * cos(map->a_z)) * cos(map->a_x) - zz * sin(map->a_x);
+
+			map->coords[x][y].x_iso = xx * map->scale + map->move_x;
+			map->coords[x][y].y_iso = yy * map->scale + map->move_y;
 			y++;
 		}
 		x++;

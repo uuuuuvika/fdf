@@ -52,68 +52,6 @@ void draw_l(t_img *img, int x1, int y1, int x2, int y2, t_color color1, t_color 
 }
 
 
-
-void draw_circle(int x, int y, int r, t_img *img)
-{
-	static const double PI = 3.1415926535;
-	double i, angle, x1, y1;
-
-	for (i = 0; i < 360; i += 0.5)
-	{
-
-		angle = i;
-		x1 = r * cos(angle * PI / 180);
-		y1 = r * sin(angle * PI / 180);
-
-		img_pix_put(img, x + x1, y + y1, PURPLE_PIXEL);
-	
-	}
-}
-
-void draw_sphere(int x, int y,  int radius, t_img *img)
-{
-    const double PI = 3.1415926535;
-
-    double theta, phi, x1, y1, z1;
-
-    for (theta = 0; theta < 360; theta += 10) 
-    {
-        for (phi = 0; phi < 180; phi += 10) 
-        {
-            // Convert spherical coordinates to Cartesian coordinates
-            x1 = radius * sin(phi * PI / 180) * cos(theta * PI / 180);
-            y1 = radius * sin(phi * PI / 180) * sin(theta * PI / 180);
-           // z1 = radius * cos(phi * PI / 180);
-
-           img_pix_put(img, x + x1, y + y1, PURPLE_PIXEL);
-            
-        }
-    }
-}
-
-void draw_dots(t_img *img, t_map *map)
-{
-	int x;
-	int y;
-	int nx;
-	int ny;
-	//int r1 = map->num_cols / 2;
-	x = 0;
-	while (x < map->num_rows)
-	{
-		y = 0;
-		while (y < map->num_cols)
-		{
-			nx = WIDTH / 2;
-			ny = HEIGHT / 2;
-			int r = map->coords[x][y].r;
-			//int z = map->coords[x][y].value * map->descale_z * map->scale;
-			draw_circle(nx, ny, r, img);
-			y++;
-		}
-		x++;
-	}
-}
 void draw_lines(t_img *img, t_map *map)
 {
 	int x;
