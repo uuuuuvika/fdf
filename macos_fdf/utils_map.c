@@ -94,9 +94,9 @@ void cartesian_to_iso(t_map *map)
 		{
 			z = map->coords[x][y].value * map->descale_z;
 			xx = (x - off_x) * cos(map->a_z) - (y - off_y) * sin(map->a_z);
-			yy = (x - off_x) * sin(map->a_z) + (y - off_y) * cos(map->a_z);
-			yy = yy * cos(map->a_x) - z * sin(map->a_x);
-
+			yy = ((x - off_x) * sin(map->a_z) + (y - off_y) * cos(map->a_z)) * cos(map->a_x) - z * sin(map->a_x);
+			//yy = yy * cos(map->a_x) - z * sin(map->a_x);
+			map->coords[x][y].r = sqrt(xx * xx + yy * yy + z * z);
 			map->coords[x][y].x_iso = xx * map->scale + map->move_x;
 			map->coords[x][y].y_iso = yy * map->scale + map->move_y;
 			y++;
@@ -105,6 +105,44 @@ void cartesian_to_iso(t_map *map)
 	}
 }
 
+void cartesian_to_spherical(t_map *map)
+{
+	t_spherical result;
+	int x;
+	int y;
+	int z;
+
+	x = 0;
+	while (x < map->num_rows)
+	{
+		y = 0;
+		while (y < map->num_cols)
+		{
+			z = map->coords[x][y].value * map->descale_z;
+			int xx = x * map->scale;
+			int yy = y * map->scale;
+			int zz = z * map->scale;
+			//polar coordinates of x and y
+			result.r = sqrt(xx * xx + yy * y + zz * zz);
+			result.theta = atan2(yy, xx) * 180 / 3.14159;
+			result.phi = atan2(sqrt(xx * xx + yy * yy), zz) * 180 / 3.14159;				
+			printf
+			(
+				"x: %i, y: %i, r: %f, theta: %f\n",
+				x,
+				y,
+				result.r,
+				result.theta
+			);
+
+			map->coords[x][y].r = result.r;
+			map->coords[x][y].theta = result.theta;
+			map->coords[x][y].phi = result.phi;
+			y++;
+		}
+		x++;
+	}
+}
 
 void create_map(char *argv, t_data *data, t_color *gradient)
 {

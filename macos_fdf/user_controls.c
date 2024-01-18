@@ -10,10 +10,6 @@ int handle_keypress(int key, t_data *data)
 		data->map.scale -= 0.5;
 	if (key == SPACE)
 		data->map.rotation_active = !data->map.rotation_active;
-	if (key == KEY_A)
-	{
-		data->map.translate_active = !data->map.translate_active;
-	}
 	if (key == KEY_D)
 	{
 		data->map.descale_z -= 0.01;
@@ -28,30 +24,18 @@ int handle_keypress(int key, t_data *data)
 	return (0);
 }
 
-// int handle_mousepress(int button, int x, int y, t_data *data)
-// {
-// 	if (button == 1)
-// 	{
-// 		data->map.translate_active = !data->map.translate_active;
+int handle_mousepress(int button, int x, int y, t_data *data)
+{
+	(void)x;
+	(void)y;
 
-// 		if (data->map.translate_active)
-// 		{
-// 			data->mouse_x = x;
-// 			data->mouse_y = y;
-// 		}
-// 		// data->mouse_x = x;
-// 		// data->mouse_y = y;
-	
-
-// 		//printf("mouse_x: %d\n", data->mouse_x);
-// 		//data->mouse_y = y;
-// 		//printf("mouse_y: %d\n", data->mouse_y);
-		
-// 	}
-	
-	
-// 	return (0);
-// }
+	if (button == 1)
+	{
+		data->map.translate_active = !data->map.translate_active;
+		get_mouse_position(&data->mouse_x, &data->mouse_y);
+	}
+	return (0);
+}
 
 void get_mouse_position(int *x, int *y)
 {
