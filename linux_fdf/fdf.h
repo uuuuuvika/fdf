@@ -27,7 +27,6 @@
 #define PURPLE_PIXEL 0xFF00FF
 #define MLX_ERROR 1
 
-
 typedef struct s_color
 {
     int r;
@@ -50,12 +49,15 @@ typedef struct s_map
     double a_z;
     double a_x;
     t_coords **coords;
+    double descale_z;
     double scale;
     bool rotation_active;
     bool translate_active;
     int move_x;
     int move_y;
-    t_color *gradient; 
+    t_color *gradient;
+    bool has_color;
+
 } t_map;
 
 typedef struct s_img
@@ -82,9 +84,11 @@ int handle_mouse(int button, int x, int y, t_data *data);
 
 void rotate(t_data *data, double increment);
 void translate(t_data *data);
-void update_visuals(double *param, int old_position, int new_position, double increment);
+void update_rotation(double *param, int old_position, int new_position, double increment);
+void update_translation(int *param, int old_position, int new_position);
 
-int is_dark(t_color color);
+// int is_dark(t_color color);
+int is_contrast(t_color color1, t_color color2)
 t_color *gen_gradient(void);
 void print_gradient(t_color *gradient);
 int gradient_to_int(t_color *color);
@@ -99,12 +103,12 @@ void fill_z(int fd, t_map *map);
 void free_arr2D(char **arr2D);
 void cartesian_to_iso(t_map *map);
 void create_map(char *argv, t_data *data, t_color *gradient);
+void cartesian_to_spherical(t_map *map);
 
 // draw
 double get_pix_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur);
 void draw_l(t_img *img, int x1, int y1, int x2, int y2, t_color color1, t_color color2);
 void draw_lines(t_img *img, t_map *map);
-
 
 int destroy_win_and_img(t_data *data);
 t_color hex_to_color(char *hex);

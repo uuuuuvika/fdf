@@ -6,10 +6,9 @@ int read_map(int fd, t_map *map)
 	int num_cols;
 	char *line;
 	char **cols;
-
-	num_rows = 0;
 	if (fd < 0)
 		return (1);
+	num_rows = 0;
 	while ((line = get_next_line(fd)) != NULL)
 	{
 		num_rows++;
@@ -25,6 +24,7 @@ int read_map(int fd, t_map *map)
 	map->a_z = -135.00 / 180 * 3.14159;
 	map->a_x = -125.00 / 180 * 3.14159;
 	map->scale = 25.0;
+	map->descale_z = 1.0;
 	map->rotation_active = false;
 	map->translate_active = false;
 	malloc_for_z(map);
@@ -61,10 +61,11 @@ void fill_z(int fd, t_map *map)
 		while (values[num_values] != NULL && values[num_values][0] != '\n')
 		{
 			char **all_pack = ft_split(values[num_values], ',');
-			if (all_pack[1] != NULL)
-				map->coords[i][num_values].color = hex_to_color(all_pack[1]);
-			else
-				map->coords[i][num_values].color = map->gradient[2];
+			// if (all_pack[1] != NULL)
+			// {
+			// 	map->has_color = true;
+			// 	map->coords[i][num_values].color = hex_to_color(all_pack[1]);
+			// }
 			map->coords[i][num_values].value = ft_atoi(all_pack[0]);
 			free_arr2D(all_pack);
 			num_values++;
@@ -92,10 +93,42 @@ void cartesian_to_iso(t_map *map)
 		y = 0;
 		while (y < map->num_cols)
 		{
-			z = map->coords[x][y].value;
+			z = map->coords[x][y].value * map->descale_z;
 			xx = (x - off_x) * cos(map->a_z) - (y - off_y) * sin(map->a_z);
-			yy = (x - off_x) * sin(map->a_z) + (y - off_y) * cos(map->a_z);
-			yy = yy * cos(map->a_x) - z * sin(map->a_x);
+			yy = ((x - off_x) * sin(map->a_z) + (y - off_y) * cos(map->a_z)) * cos(map->a_x) + z * sin(map->a_x);
+			// yy = yy * cos(map->a_x) - z * sin(map->a_x);
+			//map->coords[x][y].r = sqrt(xx * xx + yy * yy + z * z);
+			map->coords[x][y].x_iso = xx * map->scale + map->move_x;
+			map->coords[x][y].y_iso = yy * map->scale + map->move_y;
+			y++;
+		}
+		x++;
+	}
+}
+
+void cartesian_to_spherical(t_map *map)
+{
+	// t_spherical result;
+	int x;
+	int y;
+	// int z;
+	// int off_x = map->num_rows / 2;
+	// int off_y = map->num_cols / 2;
+
+	x = 0;
+	while (x < map->num_rows)
+	{
+		y = 0;
+		while (y < map->num_cols)
+		{
+			double xx = sin(3.14159 * x / map->num_rows) * cos(2 * 3.14159 * y / map->num_cols);
+			double yy = sin(3.14159 * x / map->num_rows) * sin(2 * 3.14159 * y / map->num_cols);
+			double zz = cos(3.14159 * x / map->num_rows);
+
+			//int z = map->coords[x][y].value * map->descale_z;
+
+			xx = (xx) * cos(map->a_z) - (yy) * sin(map->a_z);
+			yy = ((xx) * sin(map->a_z) + (yy) * cos(map->a_z)) * cos(map->a_x) - zz * sin(map->a_x);
 
 			map->coords[x][y].x_iso = xx * map->scale + map->move_x;
 			map->coords[x][y].y_iso = yy * map->scale + map->move_y;
@@ -115,10 +148,11 @@ void create_map(char *argv, t_data *data, t_color *gradient)
 	{
 		free(map_name);
 		free(gradient);
-		printf("WRONG MAP :(\n");
+		printf("WRONG MAP! :(\n");
 		destroy_win_and_img(data);
 	}
 	fill_z(open(map_name, O_RDONLY), &data->map);
-	//colorize_points(&data->map);
+	if (data->map.has_color == false)
+		colorize_points(&data->map);
 	free(map_name);
 }
