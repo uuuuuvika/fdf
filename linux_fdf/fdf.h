@@ -88,7 +88,7 @@ void update_rotation(double *param, int old_position, int new_position, double i
 void update_translation(int *param, int old_position, int new_position);
 
 // int is_dark(t_color color);
-int is_contrast(t_color color1, t_color color2)
+int is_contrast(t_color color1, t_color color2);
 t_color *gen_gradient(void);
 void print_gradient(t_color *gradient);
 int gradient_to_int(t_color *color);

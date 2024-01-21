@@ -21,9 +21,11 @@ int read_map(int fd, t_map *map)
 	}
 	map->num_cols = num_cols;
 	map->num_rows = num_rows;
-	map->a_z = -135.00 / 180 * 3.14159;
-	map->a_x = -125.00 / 180 * 3.14159;
-	map->scale = 25.0;
+	// map->a_z = -135.00 / 180 * 3.14159;
+	map->a_z = 0.00;
+	map->a_x = 0.00;
+	// map->a_x = -125.00 / 180 * 3.14159;
+	map->scale = 55.0;
 	map->descale_z = 1.0;
 	map->rotation_active = false;
 	map->translate_active = false;
@@ -97,7 +99,7 @@ void cartesian_to_iso(t_map *map)
 			xx = (x - off_x) * cos(map->a_z) - (y - off_y) * sin(map->a_z);
 			yy = ((x - off_x) * sin(map->a_z) + (y - off_y) * cos(map->a_z)) * cos(map->a_x) + z * sin(map->a_x);
 			// yy = yy * cos(map->a_x) - z * sin(map->a_x);
-			//map->coords[x][y].r = sqrt(xx * xx + yy * yy + z * z);
+			// map->coords[x][y].r = sqrt(xx * xx + yy * yy + z * z);
 			map->coords[x][y].x_iso = xx * map->scale + map->move_x;
 			map->coords[x][y].y_iso = yy * map->scale + map->move_y;
 			y++;
@@ -121,17 +123,22 @@ void cartesian_to_spherical(t_map *map)
 		y = 0;
 		while (y < map->num_cols)
 		{
-			double xx = sin(3.14159 * x / map->num_rows) * cos(2 * 3.14159 * y / map->num_cols);
-			double yy = sin(3.14159 * x / map->num_rows) * sin(2 * 3.14159 * y / map->num_cols);
+			int z = map->coords[x][y].value * map->descale_z;
+
+			float xx = (sin(3.14159 * x / map->num_rows) + z * 0.001) * cos(2 * 3.14159 * y / map->num_cols);
+			float yy = (sin(3.14159 * x / map->num_rows) + z * 0.001) * sin(2 * 3.14159 * y / map->num_cols);
+
+			// double zz = cos(3.14159 * x * z / map->num_rows);
+			// double zzz = cos(3.14159 * y * z / map->num_cols);
 			double zz = cos(3.14159 * x / map->num_rows);
 
-			//int z = map->coords[x][y].value * map->descale_z;
+			// xx = (xx) * cos(map->a_z) - (yy) * sin(map->a_z);
+			//  yy = ((xx) * sin(map->a_z) + (yy) * cos(map->a_z)) * cos(map->a_x) - zz * sin(map->a_x);
 
-			xx = (xx) * cos(map->a_z) - (yy) * sin(map->a_z);
-			yy = ((xx) * sin(map->a_z) + (yy) * cos(map->a_z)) * cos(map->a_x) - zz * sin(map->a_x);
+			yy = yy * cos(map->a_x) - zz * sin(map->a_x);
 
-			map->coords[x][y].x_iso = xx * map->scale + map->move_x;
-			map->coords[x][y].y_iso = yy * map->scale + map->move_y;
+			map->coords[x][y].x_iso = (xx * map->scale + map->move_x);
+			map->coords[x][y].y_iso = (yy * map->scale + map->move_y);
 			y++;
 		}
 		x++;
