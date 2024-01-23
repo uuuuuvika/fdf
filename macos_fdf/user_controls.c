@@ -47,7 +47,7 @@ void get_mouse_position(int *x, int *y)
 	CFRelease(event);
 }
 
-void update_visuals(double *param, int old_position, int new_position, double increment)
+void update_visuals(float *param, int old_position, int new_position, float increment)
 {
 	if (new_position > old_position)
 		*param += increment;
@@ -63,7 +63,7 @@ void update_visuals2(int *param, int old_position, int new_position)
 		*param -= old_position - new_position;
 }
 
-void rotate(t_data *data, double increment)
+void rotate(t_data *data, float increment)
 {
 	if (!data->map.rotation_active)
 		return;

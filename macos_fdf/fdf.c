@@ -2,9 +2,9 @@
 
 int render(t_data *data)
 {
-	static double last_a_z;
-	static double last_a_x;
-	static double last_scale;
+	static float last_a_z;
+	static float last_a_x;
+	static float last_scale;
 	static int last_move_x;
 	static int last_move_y;
 	static int last_descale_z;
@@ -76,7 +76,6 @@ int main(int argc, char **argv)
 	mlx_loop_hook(data.mlx_ptr, &render, &data);
 	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, &handle_keypress, &data);
 	mlx_mouse_hook(data.win_ptr, &handle_mousepress, &data);
-
 	mlx_loop(data.mlx_ptr);
 
 	free(gradient);

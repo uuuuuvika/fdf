@@ -49,31 +49,31 @@ typedef struct s_color
 
 typedef struct s_spherical
 {
-    double r;
-    double theta;
-    double phi;
+    float r;
+    float theta;
+    float phi;
 } t_spherical;
 
 typedef struct s_coords
 {
     int value;
-    double x_iso;
-    double y_iso;
+    float x_iso;
+    float y_iso;
     t_color color;
-    double r;
-    double theta;
-    double phi;
+    float r;
+    float theta;
+    float phi;
 } t_coords;
 
 typedef struct s_map
 {
     int num_rows;
     int num_cols;
-    double a_z;
-    double a_x;
+    float a_z;
+    float a_x;
     t_coords **coords;
-    double scale;
-    double descale_z;
+    float scale;
+    float descale_z;
     bool rotation_active;
     bool translate_active;
     int move_x;
@@ -105,9 +105,9 @@ void get_mouse_position(int *x, int *y);
 int handle_mousepress(int button, int x, int y, t_data *data);
 int handle_keypress(int key, t_data *data);
 
-void rotate(t_data *data, double increment);
+void rotate(t_data *data, float increment);
 void translate(t_data *data);
-void update_visuals(double *param, int old_position, int new_position, double increment);
+void update_visuals(float *param, int old_position, int new_position, float increment);
 
 int is_dark(t_color color);
 t_color *gen_gradient(void);
@@ -127,7 +127,7 @@ void create_map(char *argv, t_data *data, t_color *gradient);
 void cartesian_to_spherical(t_map *map);
 
 // draw
-double get_pix_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur);
+float get_pix_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur);
 void draw_l(t_img *img, int x1, int y1, int x2, int y2, t_color color1, t_color color2);
 void draw_lines(t_img *img, t_map *map);
 

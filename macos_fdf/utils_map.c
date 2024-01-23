@@ -21,9 +21,11 @@ int read_map(int fd, t_map *map)
 	}
 	map->num_cols = num_cols;
 	map->num_rows = num_rows;
-	map->a_z = -135.00 / 180 * 3.14159;
-	map->a_x = -125.00 / 180 * 3.14159;
-	map->scale = 45.0;
+	// map->a_z = -135.00 / 180 * 3.14159;
+	// map->a_x = -125.00 / 180 * 3.14159;
+	map->a_z = 0;
+	map->a_x = 0;
+	map->scale = 195.0;
 	map->descale_z = 1.0;
 	map->rotation_active = false;
 	map->translate_active = false;
@@ -76,15 +78,15 @@ void fill_z(int fd, t_map *map)
 	close(fd);
 }
 
-void cartesian_to_iso(t_map *map)
+void	cartesian_to_iso(t_map *map)
 {
-	int x;
-	int y;
-	int z;
-	double xx;
-	double yy;
-	int off_x = map->num_rows / 2;
-	int off_y = map->num_cols / 2;
+	int		x;
+	int		y;
+	int		z;
+	float	xx;
+	float	yy;
+	int		off_x = map->num_rows / 2;
+	int		off_y = map->num_cols / 2;
 
 	x = 0;
 	while (x < map->num_rows)
@@ -97,6 +99,9 @@ void cartesian_to_iso(t_map *map)
 			yy = ((x - off_x) * sin(map->a_z) + (y - off_y) * cos(map->a_z)) * cos(map->a_x) - z * sin(map->a_x);
 			// yy = yy * cos(map->a_x) - z * sin(map->a_x);
 			//map->coords[x][y].r = sqrt(xx * xx + yy * yy + z * z);
+
+			printf("x: %d, y: %d, xx: %f, yy: %f\n", x - off_x, y - off_y, xx, yy);
+
 			map->coords[x][y].x_iso = xx * map->scale + map->move_x;
 			map->coords[x][y].y_iso = yy * map->scale + map->move_y;
 			y++;
@@ -107,30 +112,62 @@ void cartesian_to_iso(t_map *map)
 
 void cartesian_to_spherical(t_map *map)
 {
-	// t_spherical result;
 	int x;
 	int y;
 	// int z;
-	int off_x = map->num_rows / 2;
-	int off_y = map->num_cols / 2;
-
+	// int off_x = map->num_rows / 2;
+	// int off_y = map->num_cols / 2;
+	float xx = 0;
+	float yy = 0;
 	x = 0;
 	while (x < map->num_rows)
 	{
 		y = 0;
 		while (y < map->num_cols)
 		{
-			double xx = sin(3.14159 * x / map->num_rows) * cos(2 * 3.14159 * y / map->num_cols);
-			double yy = sin(3.14159 * x / map->num_rows) * sin(2 * 3.14159 * y / map->num_cols);
-			double zz = cos(3.14159 * x / map->num_rows);
+			//float r = sqrt(x * x + y * y + z * z);
+			int z = map->coords[x][y].value * map->descale_z;
+			if (z < 0)
+			{
+				
+				// rho must be positive
+				// theta must be between 0 and 2pi
+				// phi must be between 0 and pi
 
-			//int z = map->coords[x][y].value * map->descale_z;
+				// 	x = rho sin (phi) cos (theta)
+				//	y = rho sin (phi) sin (theta)
 
-			xx = (xx) * cos(map->a_z) - (yy) * sin(map->a_z);
-			yy = ((xx) * sin(map->a_z) + (yy) * cos(map->a_z)) * cos(map->a_x) - zz * sin(map->a_x);
+				//	z = rho cos phi 
 
-			map->coords[x][y].x_iso = xx * map->scale + map->move_x;
-			map->coords[x][y].y_iso = yy * map->scale + map->move_y;
+				//r = 
+
+
+				map->coords[x][y].color = hex_to_color("0x0000FF");
+				// z != -1 ? printf("z: %d\n", z != -1) : 0;
+				// r = rho sin (phi) 
+
+				xx = sin(3.14159 * x / map->num_rows) * cos(2 * 3.14159 * y / map->num_cols);
+				yy = sin(3.14159 * x / map->num_rows) * sin(2 * 3.14159 * y / map->num_cols);
+			}
+			else {
+				xx = (sin(3.14159 * x / map->num_rows) ) * cos(2 * 3.14159 * y / map->num_cols);
+				yy = (sin(3.14159 * x / map->num_rows) ) * sin(2 * 3.14159 * y / map->num_cols);
+			}
+
+			// float zz = cos(3.14159 * x * z / map->num_rows);
+			// float zzz = cos(3.14159 * y * z / map->num_cols);
+			float zz = cos(3.14159 * x / map->num_rows);
+
+				if (x == 2 && y == 2)
+					printf("xx: %f, yy: %f, zz: %f\n", xx, yy, zz);
+					
+			// xx = (xx) * cos(map->a_z) - (yy) * sin(map->a_z);
+			//  yy = ((xx) * sin(map->a_z) + (yy) * cos(map->a_z)) * cos(map->a_x) - zz * sin(map->a_x);
+
+			yy = yy * cos(map->a_x) - zz * sin(map->a_x);
+
+			map->coords[x][y].x_iso = (xx * map->scale + map->move_x);
+			map->coords[x][y].y_iso = (yy * map->scale + map->move_y);
 			y++;
 		}
 		x++;

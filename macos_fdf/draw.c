@@ -1,9 +1,9 @@
 #include "fdf.h"
 
-double get_pix_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur)
+float get_pix_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur)
 {
-	double full_dist = hypot(x2 - x1, y2 - y1);
-	double dist_to_current = hypot(x_cur - x1, y_cur - y1);
+	float full_dist = hypot(x2 - x1, y2 - y1);
+	float dist_to_current = hypot(x_cur - x1, y_cur - y1);
 	if (full_dist != 0.0)
 		return (dist_to_current / full_dist);
 	return 1.0;
@@ -22,7 +22,7 @@ void draw_l(t_img *img, int x1, int y1, int x2, int y2, t_color color1, t_color 
 	int err = dx - dy;			 // 0
 	int err2;
 	int r, g, b;
-	double position;
+	float position;
 
 	while (!(x1 == x2 && y1 == y2))
 	{
@@ -56,10 +56,10 @@ void draw_lines(t_img *img, t_map *map)
 {
 	int x;
 	int y;
-	double nx_next;
-	double ny_next;
-	double nx;
-	double ny;
+	float nx_next;
+	float ny_next;
+	float nx;
+	float ny;
 
 	x = 0;
 	while (x < map->num_rows)

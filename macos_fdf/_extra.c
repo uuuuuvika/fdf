@@ -2,7 +2,7 @@
 
 void draw_dots(t_img *img, t_map *map)
 {
-	double xx, yy;
+	float xx, yy;
 	int x, y;
 
 	x = 0;
@@ -95,7 +95,7 @@ void draw_dots(t_img *img, t_map *map)
 // 	{
 // 		if (x1 >= 0 && x1 <= WIDTH && y1 >= 0 && y1 <= HEIGHT)
 // 		{
-// 			double position = get_pix_position(x1_start, x2, y1_start, y2, x1, y1);
+// 			float position = get_pix_position(x1_start, x2, y1_start, y2, x1, y1);
 // 			int r = round(map->gradient[0].r * (1 - position) + map->gradient[1].r * position);
 // 			int g = round(map->gradient[0].g * (1 - position) + map->gradient[1].g * position);
 // 			int b = round(map->gradient[0].b * (1 - position) + map->gradient[1].b * position);
@@ -122,11 +122,11 @@ void draw_dots(t_img *img, t_map *map)
 // {
 // 	int x;
 // 	int y;
-// 	double nx_next;
-// 	double ny_next;
-// 	double nz_next;
-// 	double nx;
-// 	double ny;
+// 	float nx_next;
+// 	float ny_next;
+// 	float nz_next;
+// 	float nx;
+// 	float ny;
 // 	//int nz;
 
 // 	x = 0;
