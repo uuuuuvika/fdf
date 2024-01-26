@@ -13,12 +13,12 @@ int handle_keypress(int key, t_data *data)
 	if (key == KEY_D)
 	{
 		data->map.descale_z -= 0.01;
-		printf("descale_z: %f\n", data->map.descale_z);
+		// printf("descale_z: %f\n", data->map.descale_z);
 	}
 	if (key == KEY_S)
 	{
 		data->map.descale_z += 0.01;
-		printf("descale_z: %f\n", data->map.descale_z);
+		// printf("descale_z: %f\n", data->map.descale_z);
 	}
 
 	return (0);
@@ -83,7 +83,7 @@ void translate(t_data *data)
 		return;
 	static int mouse_x;
 	static int mouse_y;
-	printf("mouse_x: %d\n", mouse_x);
+	// printf("mouse_x: %d\n", mouse_x);
 	get_mouse_position(&mouse_x, &mouse_y);
 	update_visuals2(&data->map.move_x, data->mouse_x, mouse_x);
 	update_visuals2(&data->map.move_y, data->mouse_y, mouse_y);

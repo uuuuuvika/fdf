@@ -24,6 +24,7 @@ int render(t_data *data)
 		cartesian_to_spherical(&data->map);
 		//draw_dots(&data->img, &data->map);
 		draw_lines(&data->img, &data->map);
+		//draw_circle(&data->img, &data->map);
 		last_a_z = data->map.a_z;
 		last_a_x = data->map.a_x;
 		last_scale = data->map.scale;
@@ -70,6 +71,7 @@ int main(int argc, char **argv)
 	cartesian_to_spherical(&data.map);
 	//draw_dots(&data.img, &data.map);
 	draw_lines(&data.img, &data.map);
+	//draw_circle(&data.img, &data.map);
 
 	print_gradient(data.map.gradient);
 

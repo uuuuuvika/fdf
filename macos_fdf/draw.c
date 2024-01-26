@@ -51,6 +51,55 @@ void draw_l(t_img *img, int x1, int y1, int x2, int y2, t_color color1, t_color 
 	}
 }
 
+void draw_circle(t_img *img, t_map *map)
+{
+	int x;
+	int y;
+	float xx = 0;
+	float yy = 0;
+	
+
+	float	off_x = map->num_rows / 2;
+	float	off_y = map->num_cols / 2;
+
+	x = 0;
+	while (x < map->num_rows)
+	{
+		y = 0;
+		while (y < map->num_cols)
+		{
+			int z = map->coords[x][y].value * map->descale_z;
+
+			int r = sqrt((x - off_x) * (x - off_x) + (y - off_y) * (y - off_y)); //-2 -2  -2 -1  -2 0  -2 1  -2 2 
+			r = r * 40 + z * 2;
+
+			printf("z: %d, r: %d\n", z, r);
+			//int r2 = 1 * 20;
+
+			// int r3 = sqrt(y * y + x * x ) * 20;
+			// printf("r3: %d\n", r3);
+
+			double theta = atan2(y - off_y, x - off_x);
+			//printf("theta: %f\n", theta);
+
+			// double theta_degrees = theta * (180.0 / M_PI);
+			// printf("theta: %f\n\n", theta_degrees);
+        		
+			xx = r * cos(2 * M_PI * (theta));
+            yy = r * sin(2 * M_PI * (theta));
+			printf("x: %d, y: %d, xx: %f, yy: %f\n", x, y, xx, yy);
+			
+
+			img_pix_put(img, xx + WIDTH / 2, yy + HEIGHT / 2, PURPLE_PIXEL);
+
+			// xx = r3 * cos(2 * M_PI * (theta));
+            // yy = r3 * sin(2 * M_PI * (theta));
+			// img_pix_put(img, xx + WIDTH / 2, yy + HEIGHT / 2, PURPLE_PIXEL);
+			y++;
+		}
+		x++;
+	}
+}
 
 void draw_lines(t_img *img, t_map *map)
 {

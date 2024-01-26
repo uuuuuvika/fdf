@@ -101,6 +101,8 @@ typedef struct s_data
     t_map map;
 } t_data;
 
+void draw_circle(t_img *img, t_map *map);
+
 void get_mouse_position(int *x, int *y);
 int handle_mousepress(int button, int x, int y, t_data *data);
 int handle_keypress(int key, t_data *data);
