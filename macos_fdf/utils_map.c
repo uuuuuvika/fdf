@@ -146,9 +146,7 @@ void cartesian_to_spherical(t_map *map)
 
 			// circle with offset
 			int z = map->coords[x][y].value * map->descale_z;
-
 			int r = sqrt((x - off_x) * (x - off_x) + (y - off_y) * (y - off_y)); 
-			r = r * 40 + z * 2;
 			printf("z: %d, r: %d\n", z, r);
 			//int r2 = 1 * 20;
 
@@ -158,30 +156,25 @@ void cartesian_to_spherical(t_map *map)
 			// double theta_degrees = theta * (180.0 / M_PI);
 			// printf("theta: %f\n\n", theta_degrees);
         		
-			xx = r * cos(2 * M_PI * (theta));
-            yy = r * sin(2 * M_PI * (theta));
-			printf("x: %d, y: %d, xx: %f, yy: %f\n", x, y, xx, yy);
+			xx = r * cos(2 * M_PI * theta);
+            yy = r * sin(2 * M_PI * theta);
+
 			
-
-			// xx = sin(3.14159 * x / (map->num_rows)) * cos(2 * 3.14159 * y / (map->num_cols)); // for 4/4 map 0 => -0.49
-			// float ss = sin(3.14159 * x / (map->num_rows));
-			// float cc = cos(2 * 3.14159 * x / (map->num_cols));
-			// yy = sin(3.14159 * x / (map->num_rows)) * sin(2 * 3.14159 * y / (map->num_cols)); // for 4/4 map 0 => 0.49
-
+			// xx = sin(3.14159 * x / (map->num_rows)) * cos(2 * 3.14159 * y / (map->num_cols));
+			// yy = sin(3.14159 * x / (map->num_rows)) * sin(2 * 3.14159 * y / (map->num_cols)); 
 			// int theta = 2 * 3.14159 * y / (map->num_cols);
 			
-			// //zz = cos(3.14159 * x / (map->num_rows));
+			//zz = cos(3.14159 * x / (map->num_rows));
+			//double phi = atan(zz);
+			zz = r * cos(M_PI * (theta));
 
-			// printf("x: %d, y: %d, xx: %f, yy: %f\n", x, y, xx, yy);
-			// printf("sin: %f, cos: %f\n\n", ss, cc);
+			xx = xx * cos(map->a_z) - yy * sin(map->a_z);
+			yy = (xx * sin(map->a_z) + yy * cos(map->a_z)) * cos(map->a_x) - z * sin(map->a_x);
 
-			// xx = (xx) * cos(map->a_z) - (yy) * sin(map->a_z);
-			// yy = ((xx) * sin(map->a_z) + (yy) * cos(map->a_z)) * cos(map->a_x) - zz * sin(map->a_x);
+			printf("x: %d, y: %d, xx: %f, yy: %f\n", x, y, xx, yy);
 
-			//yy = yy * cos(map->a_x) - zz * sin(map->a_x);
-
-			map->coords[x][y].x_iso = (xx * map->scale + map->move_x);
-			map->coords[x][y].y_iso = (yy * map->scale + map->move_y);
+			map->coords[x][y].x_iso = xx * map->scale + map->move_x;
+			map->coords[x][y].y_iso = yy * map->scale + map->move_y;
 			y++;
 		}
 		x++;
