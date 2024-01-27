@@ -1,11 +1,32 @@
 #include "fdf.h"
 
-int read_map(int fd, t_map *map)
+int	init_map(t_map *map, t_color *gradient)
 {
-	int num_rows;
-	int num_cols;
-	char *line;
-	char **cols;
+	map->num_rows = 0;
+	map->num_cols = 0;
+	map->coords = NULL;
+	map->move_x = 0;
+	map->move_y = 0;
+	// map->a_z = 0;
+	// map->a_x = 0;
+	map->a_z = -135.00 / 180 * 3.14159;
+	map->a_x = -125.00 / 180 * 3.14159;
+	map->scale = 5.0;
+	map->descale_z = 1.0;
+	map->rotation_active = false;
+	map->translate_active = false;
+	map->gradient = gradient;
+	// map->has_color = false;
+	return (0);
+}
+
+int	read_map(int fd, t_map *map)
+{
+	int		num_rows;
+	int		num_cols;
+	char	*line;
+	char	**cols;
+
 	if (fd < 0)
 		return (1);
 	num_rows = 0;
@@ -21,20 +42,12 @@ int read_map(int fd, t_map *map)
 	}
 	map->num_cols = num_cols;
 	map->num_rows = num_rows;
-	// map->a_z = -135.00 / 180 * 3.14159;
-	map->a_z = 0.00;
-	map->a_x = 0.00;
-	// map->a_x = -125.00 / 180 * 3.14159;
-	map->scale = 55.0;
-	map->descale_z = 1.0;
-	map->rotation_active = false;
-	map->translate_active = false;
 	malloc_for_z(map);
 	close(fd);
 	return (0);
 }
 
-void malloc_for_z(t_map *map)
+void	malloc_for_z(t_map *map)
 {
 	int i;
 
@@ -47,12 +60,13 @@ void malloc_for_z(t_map *map)
 	}
 }
 
-void fill_z(int fd, t_map *map)
+void	fill_z(int fd, t_map *map)
 {
-	int i;
-	char *line;
-	char **values;
-	int num_values;
+	int		i;
+	char	*line;
+	char	**values;
+	int		num_values;
+	char	**val_w_colors; 
 
 	i = 0;
 	while (i < map->num_rows)
@@ -62,14 +76,14 @@ void fill_z(int fd, t_map *map)
 		num_values = 0;
 		while (values[num_values] != NULL && values[num_values][0] != '\n')
 		{
-			char **all_pack = ft_split(values[num_values], ',');
-			// if (all_pack[1] != NULL)
+			val_w_colors = ft_split(values[num_values], ',');
+			// if (val_w_colors[1] != NULL)
 			// {
 			// 	map->has_color = true;
-			// 	map->coords[i][num_values].color = hex_to_color(all_pack[1]);
+			// 	map->coords[i][num_values].color = hex_to_color(val_w_colors[1]);
 			// }
-			map->coords[i][num_values].value = ft_atoi(all_pack[0]);
-			free_arr2D(all_pack);
+			map->coords[i][num_values].value = ft_atoi(val_w_colors[0]);
+			free_arr2D(val_w_colors);
 			num_values++;
 		}
 		i++;
@@ -79,16 +93,32 @@ void fill_z(int fd, t_map *map)
 	close(fd);
 }
 
+void rotate_over_z(int x, int y, float *xx, float *yy, float angle)
+{
+	*xx = x * cos(angle) - y * sin(angle);
+	*yy = x * sin(angle) + y * cos(angle);
+	//*zz = z;
+}
+
+void rotate_over_x(int x, int y, int z, float *xx, float *yy, float angle)
+{
+	*xx = x;
+	*yy = y * cos(angle) - z * sin(angle);
+	//*zz = y * sin(angle) + z * cos(angle);
+}
+
 void cartesian_to_iso(t_map *map)
 {
 	int x;
 	int y;
 	int z;
-	double xx;
-	double yy;
-	int off_x = map->num_rows / 2;
-	int off_y = map->num_cols / 2;
+	float xx;
+	float yy;
+	int off_x;
+	int off_y;
 
+	off_x = map->num_rows / 2;
+	off_y = map->num_cols / 2;
 	x = 0;
 	while (x < map->num_rows)
 	{
@@ -96,10 +126,8 @@ void cartesian_to_iso(t_map *map)
 		while (y < map->num_cols)
 		{
 			z = map->coords[x][y].value * map->descale_z;
-			xx = (x - off_x) * cos(map->a_z) - (y - off_y) * sin(map->a_z);
-			yy = ((x - off_x) * sin(map->a_z) + (y - off_y) * cos(map->a_z)) * cos(map->a_x) + z * sin(map->a_x);
-			// yy = yy * cos(map->a_x) - z * sin(map->a_x);
-			// map->coords[x][y].r = sqrt(xx * xx + yy * yy + z * z);
+			rotate_over_z(x - off_x, y - off_y, &xx, &yy, map->a_z);
+			rotate_over_x(xx, yy, z, &xx, &yy, map->a_x);
 			map->coords[x][y].x_iso = xx * map->scale + map->move_x;
 			map->coords[x][y].y_iso = yy * map->scale + map->move_y;
 			y++;
@@ -108,14 +136,15 @@ void cartesian_to_iso(t_map *map)
 	}
 }
 
+
+
 void cartesian_to_spherical(t_map *map)
 {
-	// t_spherical result;
 	int x;
 	int y;
-	// int z;
-	// int off_x = map->num_rows / 2;
-	// int off_y = map->num_cols / 2;
+	float xx = 0;
+	float yy = 0;
+	float zz = 0;
 
 	x = 0;
 	while (x < map->num_rows)
@@ -123,22 +152,25 @@ void cartesian_to_spherical(t_map *map)
 		y = 0;
 		while (y < map->num_cols)
 		{
-			int z = map->coords[x][y].value * map->descale_z;
+			int relief = map->coords[x][y].value * map->descale_z;
+			// if (relief > 255)
+			// 	relief = 255;
 
-			float xx = (sin(3.14159 * x / map->num_rows) + z * 0.001) * cos(2 * 3.14159 * y / map->num_cols);
-			float yy = (sin(3.14159 * x / map->num_rows) + z * 0.001) * sin(2 * 3.14159 * y / map->num_cols);
+			float theta = M_PI * x / map->num_rows;	  // Latitude
+			float phi = 2 * M_PI * y / map->num_cols; // Longitude
 
-			// double zz = cos(3.14159 * x * z / map->num_rows);
-			// double zzz = cos(3.14159 * y * z / map->num_cols);
-			double zz = cos(3.14159 * x / map->num_rows);
+			xx = sin(theta) * cos(phi) * (1 + relief / 6000.0);
+			yy = sin(theta) * sin(phi) * (1 + relief / 6000.0);
+			zz = cos(theta) * (1 + relief / 6000.0);
 
-			// xx = (xx) * cos(map->a_z) - (yy) * sin(map->a_z);
-			//  yy = ((xx) * sin(map->a_z) + (yy) * cos(map->a_z)) * cos(map->a_x) - zz * sin(map->a_x);
+			// rotation  around z axis
+			float temp_x = xx * cos(map->a_z) - yy * sin(map->a_z);
+			float temp_y = xx * sin(map->a_z) + yy * cos(map->a_z);
+			// rotation around x axis
+			yy = temp_y * cos(map->a_x) - zz * sin(map->a_x);
 
-			yy = yy * cos(map->a_x) - zz * sin(map->a_x);
-
-			map->coords[x][y].x_iso = (xx * map->scale + map->move_x);
-			map->coords[x][y].y_iso = (yy * map->scale + map->move_y);
+			map->coords[x][y].x_iso = temp_x * map->scale + map->move_x;
+			map->coords[x][y].y_iso = yy * map->scale + map->move_y;
 			y++;
 		}
 		x++;
@@ -151,6 +183,7 @@ void create_map(char *argv, t_data *data, t_color *gradient)
 
 	map_name = ft_strjoin("maps/", argv);
 	map_name = ft_spec_strjoin(map_name, ".fdf");
+	init_map(&data->map, gradient);
 	if (read_map(open(map_name, O_RDONLY), &data->map) != 0)
 	{
 		free(map_name);
@@ -159,7 +192,7 @@ void create_map(char *argv, t_data *data, t_color *gradient)
 		destroy_win_and_img(data);
 	}
 	fill_z(open(map_name, O_RDONLY), &data->map);
-	if (data->map.has_color == false)
-		colorize_points(&data->map);
+	// if (data->map.has_color == false)
+	colorize_points(&data->map);
 	free(map_name);
 }

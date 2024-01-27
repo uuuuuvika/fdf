@@ -80,13 +80,13 @@ t_color hex_to_color(char *hex_string)
             return color;
         }
         hex_value = (hex_value << 4) | digit;
-        printf("hex_value: %d\n", hex_value);
+        //printf("hex_value: %d\n", hex_value);
         ++i;
     }
     color.r = (hex_value >> 16) & 0xFF;
     color.g = (hex_value >> 8) & 0xFF;
     color.b = hex_value & 0xFF;
-    printf("color: %d, %d, %d\n", color.r, color.g, color.b);
+   // printf("color: %d, %d, %d\n", color.r, color.g, color.b);
     return color;
 }
 
@@ -124,7 +124,7 @@ void colorize_points(t_map *map)
                 map->coords[i][j].color = map->gradient[0];
             else
             {
-                double step = (double)(map->coords[i][j].value - min_val) / (max_val - min_val);
+                float step = (float)(map->coords[i][j].value - min_val) / (max_val - min_val);
                 map->coords[i][j].color.r = map->gradient[0].r + step * (map->gradient[1].r - map->gradient[0].r);
                 map->coords[i][j].color.g = map->gradient[0].g + step * (map->gradient[1].g - map->gradient[0].g);
                 map->coords[i][j].color.b = map->gradient[0].b + step * (map->gradient[1].b - map->gradient[0].b);

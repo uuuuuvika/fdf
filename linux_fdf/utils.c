@@ -28,3 +28,14 @@ void free_arr2D(char **arr2D)
 		free(arr2D[i++]);
 	free(arr2D);
 }
+
+int	handle_last_render_vars(t_render_vars *lrv, t_data *data)
+{
+	lrv->last_a_z = data->map.a_z;
+	lrv->last_a_x = data->map.a_x;
+	lrv->last_scale = data->map.scale;
+	lrv->last_move_x = data->map.move_x;
+	lrv->last_move_y = data->map.move_y;
+	lrv->last_descale_z = data->map.descale_z;
+	return (0);
+}

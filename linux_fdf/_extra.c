@@ -2,7 +2,7 @@
 
 void draw_dots(t_img *img, t_map *map)
 {
-	double xx, yy;
+	float xx, yy;
 	int x, y;
 
 	x = 0;
@@ -45,9 +45,9 @@ void draw_dots(t_img *img, t_map *map)
 // 			float xx = (sin(3.14159 * x / map->num_rows) + z * 0.001) * cos(2 * 3.14159 * y / map->num_cols);
 // 			float yy = (sin(3.14159 * x / map->num_rows) - z * 0.001) * sin(2 * 3.14159 * y / map->num_cols);
 
-// 			// double zz = cos(3.14159 * x * z / map->num_rows);
-// 			// double zzz = cos(3.14159 * y * z / map->num_cols);
-// 			double zz = cos(3.14159 * x / map->num_rows);
+// 			// float zz = cos(3.14159 * x * z / map->num_rows);
+// 			// float zzz = cos(3.14159 * y * z / map->num_cols);
+// 			float zz = cos(3.14159 * x / map->num_rows);
 
 // 			// xx = (xx) * cos(map->a_z) - (yy) * sin(map->a_z);
 // 			//  yy = ((xx) * sin(map->a_z) + (yy) * cos(map->a_z)) * cos(map->a_x) - zz * sin(map->a_x);

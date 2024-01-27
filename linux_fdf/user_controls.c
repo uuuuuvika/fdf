@@ -30,7 +30,7 @@ int handle_mouse(int button, int x, int y, t_data *data)
 	return (0);
 }
 
-void update_rotation(double *param, int old_position, int new_position, double increment)
+void update_rotation(float *param, int old_position, int new_position, float increment)
 {
 	if (new_position > old_position)
 		*param += increment;
@@ -47,13 +47,13 @@ void update_translation(int *param, int old_position, int new_position)
 }
 
 
-void rotate(t_data *data, double increment)
+void rotate(t_data *data, float increment)
 {
+	if (!data->map.rotation_active)
+		return;
 	static int mouse_x;
 	static int mouse_y;
 
-	if (!data->map.rotation_active)
-		return;
 	mlx_mouse_get_pos(data->mlx_ptr, data->win_ptr, &mouse_x, &mouse_y);
 	update_rotation(&data->map.a_z, data->mouse_x, mouse_x, increment);
 	update_rotation(&data->map.a_x, data->mouse_y, mouse_y, increment);
