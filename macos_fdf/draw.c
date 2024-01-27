@@ -71,7 +71,7 @@ void draw_circle(t_img *img, t_map *map)
 			int z = map->coords[x][y].value * map->descale_z;
 
 			int r = sqrt((x - off_x) * (x - off_x) + (y - off_y) * (y - off_y)); //-2 -2  -2 -1  -2 0  -2 1  -2 2 
-			r = r * 40 + z * 2;
+			// r = r * 40 + z * 2;
 
 			printf("z: %d, r: %d\n", z, r);
 			//int r2 = 1 * 20;
@@ -87,8 +87,15 @@ void draw_circle(t_img *img, t_map *map)
         		
 			xx = r * cos(2 * M_PI * (theta));
             yy = r * sin(2 * M_PI * (theta));
-			printf("x: %d, y: %d, xx: %f, yy: %f\n", x, y, xx, yy);
+			//printf("x: %d, y: %d, xx: %f, yy: %f\n", x, y, xx, yy);
 			
+			//z = r * cos(M_PI * (theta));
+
+			xx = xx * cos(map->a_z) - yy * sin(map->a_z);
+			yy = (xx * sin(map->a_z) + yy * cos(map->a_z)) * cos(map->a_x) * sin(map->a_x);
+
+ 			xx = xx * map->scale + map->move_x;
+			yy = yy * map->scale + map->move_y;
 
 			img_pix_put(img, xx + WIDTH / 2, yy + HEIGHT / 2, PURPLE_PIXEL);
 

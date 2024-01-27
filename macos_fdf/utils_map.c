@@ -25,7 +25,7 @@ int read_map(int fd, t_map *map)
 	// map->a_x = -125.00 / 180 * 3.14159;
 	map->a_z = 0;
 	map->a_x = 0;
-	map->scale = 1.0;
+	map->scale = 150.0;
 	map->descale_z = 1.0;
 	map->rotation_active = false;
 	map->translate_active = false;
@@ -100,7 +100,7 @@ void	cartesian_to_iso(t_map *map)
 			// yy = yy * cos(map->a_x) - z * sin(map->a_x);
 			//map->coords[x][y].r = sqrt(xx * xx + yy * yy + z * z);
 
-			printf("x: %d, y: %d, xx: %f, yy: %f\n", x - off_x, y - off_y, xx, yy);
+			//printf("x: %d, y: %d, xx: %f, yy: %f\n", x - off_x, y - off_y, xx, yy);
 
 			map->coords[x][y].x_iso = xx * map->scale + map->move_x;
 			map->coords[x][y].y_iso = yy * map->scale + map->move_y;
@@ -131,7 +131,7 @@ void cartesian_to_spherical(t_map *map)
 		while (y < map->num_cols)
 		{
 			//float r = sqrt(x * x + y * y + z * z);
-			//int z = map->coords[x][y].value * map->descale_z;
+			int z = map->coords[x][y].value * map->descale_z;
 		
 			// rho must be positive
 			// theta must be between 0 and 2pi
@@ -145,33 +145,48 @@ void cartesian_to_spherical(t_map *map)
 
 
 			// circle with offset
-			int z = map->coords[x][y].value * map->descale_z;
-			int r = sqrt((x - off_x) * (x - off_x) + (y - off_y) * (y - off_y)); 
-			printf("z: %d, r: %d\n", z, r);
-			//int r2 = 1 * 20;
-
+			//int z = map->coords[x][y].value * map->descale_z;
+			int r = sqrt((x - off_x) * (x - off_x) + (y - off_y) * (y - off_y));
+			//printf("z: %d, r: %d\n", z, r);
 			double theta = atan2(y - off_y, x - off_x);
+			//double phi = atan2(z, r);
 			//printf("theta: %f\n", theta);
-
+			//double s = (z * 1) / r;
+			//printf("s: %f\n", s);
 			// double theta_degrees = theta * (180.0 / M_PI);
 			// printf("theta: %f\n\n", theta_degrees);
         		
-			xx = r * cos(2 * M_PI * theta);
-            yy = r * sin(2 * M_PI * theta);
+			// xx = r * cos(2 * M_PI * theta);
+            // yy = r * sin(2 * M_PI * theta);
+			// zz = r * cos(M_PI * theta);
 
+			xx = (sin(M_PI * (x+1) / map->num_rows)) * cos(2 * M_PI * (y+1) / map->num_cols);
+
+			yy = (sin(M_PI * (x+1) / map->num_rows))* sin(2 * M_PI * (y+1) / map->num_cols);
+			zz = cos(M_PI * (x+1) / map->num_rows) ;
+
+			// xx = (xx) * cos(map->a_z) - (yy) * sin(map->a_z);
+			//  yy = ((xx) * sin(map->a_z) + (yy) * cos(map->a_z)) * cos(map->a_x) - zz * sin(map->a_x);
+
+			yy = yy * cos(map->a_x) - zz * sin(map->a_x);
+			//zz = cos(M_PI * x / map->num_rows);
+			//printf ("zz: %f\n", zz);
+
+			// xx = sin(M_PI * x / (map->num_rows)) * cos(2 * M_PI * y / (map->num_cols));
+			// yy = sin(M_PI * x / (map->num_rows)) * sin(2 * M_PI * y / (map->num_cols)); 
+			// int theta = 2 * M_PI * y / (map->num_cols);
 			
-			// xx = sin(3.14159 * x / (map->num_rows)) * cos(2 * 3.14159 * y / (map->num_cols));
-			// yy = sin(3.14159 * x / (map->num_rows)) * sin(2 * 3.14159 * y / (map->num_cols)); 
-			// int theta = 2 * 3.14159 * y / (map->num_cols);
-			
-			//zz = cos(3.14159 * x / (map->num_rows));
+			//zz = cos(M_PI * x / (map->num_rows));
 			//double phi = atan(zz);
-			zz = r * cos(M_PI * (theta));
+			//zz = r * cos(M_PI * (theta));
 
-			xx = xx * cos(map->a_z) - yy * sin(map->a_z);
-			yy = (xx * sin(map->a_z) + yy * cos(map->a_z)) * cos(map->a_x) - z * sin(map->a_x);
+			// zz = r * cos(M_PI * s);
 
-			printf("x: %d, y: %d, xx: %f, yy: %f\n", x, y, xx, yy);
+			// xx = xx * cos(map->a_z) - yy * sin(map->a_z);
+			// yy = (xx * sin(map->a_z) + yy * cos(map->a_z)) - zz;
+			//yy = yy * cos(map->a_x) - zz * sin(map->a_x);
+
+			//printf("x: %d, y: %d, xx: %f, yy: %f\n", x, y, xx, yy);
 
 			map->coords[x][y].x_iso = xx * map->scale + map->move_x;
 			map->coords[x][y].y_iso = yy * map->scale + map->move_y;
