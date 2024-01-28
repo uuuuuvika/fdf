@@ -24,6 +24,11 @@ void draw_dots(t_img *img, t_map *map)
 	}
 }
 
+// ROTATION !!
+//xx = (x - off_x) * cos(map->a_z) - (y - off_y) * sin(map->a_z);
+//yy = ((x - off_x) * sin(map->a_z) + (y - off_y) * cos(map->a_z)) * cos(map->a_x) - z * sin(map->a_x);
+
+
 //animation base (looks good with t1)
 // void cartesian_to_spherical(t_map *map)
 // {

@@ -6,7 +6,7 @@
 /*   By: vshcherb <vshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 20:23:37 by vshcherb          #+#    #+#             */
-/*   Updated: 2024/01/27 23:52:32 by vshcherb         ###   ########.fr       */
+/*   Updated: 2024/01/28 19:50:49 by vshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
 		return (MLX_ERROR);
 	}
 	if (gradient == NULL)
-		return (MLX_ERROR);
+		return (MLX_ERROR);//to
 
 	data.mlx_ptr = mlx_init();
 
@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 
 	if (data.win_ptr == NULL)
 	{
-		free(data.win_ptr);
+		//free(data.win_ptr);
 		return (MLX_ERROR);
 	}
 	
@@ -87,5 +87,5 @@ int main(int argc, char **argv)
 
 	free(gradient);
 	destroy_win_and_img(&data);
-	// return (0);
+	return (0);
 }

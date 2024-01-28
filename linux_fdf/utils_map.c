@@ -11,7 +11,7 @@ int	init_map(t_map *map, t_color *gradient)
 	// map->a_x = 0;
 	map->a_z = -135.00 / 180 * 3.14159;
 	map->a_x = -125.00 / 180 * 3.14159;
-	map->scale = 5.0;
+	map->scale = 10.0; 
 	map->descale_z = 1.0;
 	map->rotation_active = false;
 	map->translate_active = false;
@@ -47,7 +47,7 @@ int	read_map(int fd, t_map *map)
 	return (0);
 }
 
-void	malloc_for_z(t_map *map)
+void	malloc_for_z(t_map *map) //here are reachable bytes
 {
 	int i;
 
@@ -66,7 +66,7 @@ void	fill_z(int fd, t_map *map)
 	char	*line;
 	char	**values;
 	int		num_values;
-	char	**val_w_colors; 
+	//char	**val_w_colors; 
 
 	i = 0;
 	while (i < map->num_rows)
@@ -76,14 +76,14 @@ void	fill_z(int fd, t_map *map)
 		num_values = 0;
 		while (values[num_values] != NULL && values[num_values][0] != '\n')
 		{
-			val_w_colors = ft_split(values[num_values], ',');
+			//val_w_colors = ft_split(values[num_values], ',');
 			// if (val_w_colors[1] != NULL)
 			// {
 			// 	map->has_color = true;
 			// 	map->coords[i][num_values].color = hex_to_color(val_w_colors[1]);
 			// }
-			map->coords[i][num_values].value = ft_atoi(val_w_colors[0]);
-			free_arr2D(val_w_colors);
+			map->coords[i][num_values].value = ft_atoi(values[num_values]);
+			//free_arr2D(val_w_colors);
 			num_values++;
 		}
 		i++;
@@ -91,90 +91,6 @@ void	fill_z(int fd, t_map *map)
 		free(line);
 	}
 	close(fd);
-}
-
-void rotate_over_z(int x, int y, float *xx, float *yy, float angle)
-{
-	*xx = x * cos(angle) - y * sin(angle);
-	*yy = x * sin(angle) + y * cos(angle);
-	//*zz = z;
-}
-
-void rotate_over_x(int x, int y, int z, float *xx, float *yy, float angle)
-{
-	*xx = x;
-	*yy = y * cos(angle) - z * sin(angle);
-	//*zz = y * sin(angle) + z * cos(angle);
-}
-
-void cartesian_to_iso(t_map *map)
-{
-	int x;
-	int y;
-	int z;
-	float xx;
-	float yy;
-	int off_x;
-	int off_y;
-
-	off_x = map->num_rows / 2;
-	off_y = map->num_cols / 2;
-	x = 0;
-	while (x < map->num_rows)
-	{
-		y = 0;
-		while (y < map->num_cols)
-		{
-			z = map->coords[x][y].value * map->descale_z;
-			rotate_over_z(x - off_x, y - off_y, &xx, &yy, map->a_z);
-			rotate_over_x(xx, yy, z, &xx, &yy, map->a_x);
-			map->coords[x][y].x_iso = xx * map->scale + map->move_x;
-			map->coords[x][y].y_iso = yy * map->scale + map->move_y;
-			y++;
-		}
-		x++;
-	}
-}
-
-
-
-void cartesian_to_spherical(t_map *map)
-{
-	int x;
-	int y;
-	float xx = 0;
-	float yy = 0;
-	float zz = 0;
-
-	x = 0;
-	while (x < map->num_rows)
-	{
-		y = 0;
-		while (y < map->num_cols)
-		{
-			int relief = map->coords[x][y].value * map->descale_z;
-			// if (relief > 255)
-			// 	relief = 255;
-
-			float theta = M_PI * x / map->num_rows;	  // Latitude
-			float phi = 2 * M_PI * y / map->num_cols; // Longitude
-
-			xx = sin(theta) * cos(phi) * (1 + relief / 6000.0);
-			yy = sin(theta) * sin(phi) * (1 + relief / 6000.0);
-			zz = cos(theta) * (1 + relief / 6000.0);
-
-			// rotation  around z axis
-			float temp_x = xx * cos(map->a_z) - yy * sin(map->a_z);
-			float temp_y = xx * sin(map->a_z) + yy * cos(map->a_z);
-			// rotation around x axis
-			yy = temp_y * cos(map->a_x) - zz * sin(map->a_x);
-
-			map->coords[x][y].x_iso = temp_x * map->scale + map->move_x;
-			map->coords[x][y].y_iso = yy * map->scale + map->move_y;
-			y++;
-		}
-		x++;
-	}
 }
 
 void create_map(char *argv, t_data *data, t_color *gradient)
@@ -187,7 +103,8 @@ void create_map(char *argv, t_data *data, t_color *gradient)
 	if (read_map(open(map_name, O_RDONLY), &data->map) != 0)
 	{
 		free(map_name);
-		free(gradient);
+		//free(gradient);
+		//free(&data->map);
 		printf("WRONG MAP! :(\n");
 		destroy_win_and_img(data);
 	}

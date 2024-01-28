@@ -53,6 +53,8 @@ void rotate(t_data *data, float increment)
 		return;
 	static int mouse_x;
 	static int mouse_y;
+	data->mouse_x = mouse_x;
+	data->mouse_y = mouse_y;
 
 	mlx_mouse_get_pos(data->mlx_ptr, data->win_ptr, &mouse_x, &mouse_y);
 	update_rotation(&data->map.a_z, data->mouse_x, mouse_x, increment);

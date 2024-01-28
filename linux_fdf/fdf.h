@@ -67,7 +67,9 @@ typedef struct s_map
     int move_x;
     int move_y;
     t_color *gradient;
-    bool has_color;
+    // bool has_color;
+    int offset_x;
+    int offset_y;
 
 } t_map;
 

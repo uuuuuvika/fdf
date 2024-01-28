@@ -8,13 +8,23 @@ int destroy_win_and_img(t_data *data)
     }
     if (data->win_ptr != NULL) {
         mlx_destroy_window(data->mlx_ptr, data->win_ptr);
+        //free(data->win_ptr);
         data->win_ptr = NULL;
-        free(data->win_ptr);
     }
     if (data->mlx_ptr != NULL) {
         mlx_destroy_display(data->mlx_ptr);
-        data->mlx_ptr = NULL;
         free(data->mlx_ptr);
+        data->mlx_ptr = NULL;
+    }
+    if (data->map.coords != NULL) {
+        while(data->map.num_rows--)
+            free(data->map.coords[data->map.num_rows]);
+        free(data->map.coords);
+        data->map.coords = NULL;  
+    }
+    if (data->map.gradient != NULL) {
+        free(data->map.gradient);
+        data->map.gradient = NULL;
     }
     exit(0);
 }
