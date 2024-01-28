@@ -42,22 +42,11 @@ int	read_map(int fd, t_map *map)
 	}
 	map->num_cols = num_cols;
 	map->num_rows = num_rows;
+	// printf("num_rows: %d\n", num_rows);
+	// printf("num_cols: %d\n", num_cols);
 	malloc_for_z(map);
 	close(fd);
 	return (0);
-}
-
-void	malloc_for_z(t_map *map) //here are reachable bytes
-{
-	int i;
-
-	map->coords = malloc(sizeof(t_coords *) * map->num_rows);
-	i = 0;
-	while (i < map->num_rows)
-	{
-		map->coords[i] = malloc(sizeof(t_coords) * map->num_cols);
-		i++;
-	}
 }
 
 void	fill_z(int fd, t_map *map)
@@ -83,9 +72,14 @@ void	fill_z(int fd, t_map *map)
 			// 	map->coords[i][num_values].color = hex_to_color(val_w_colors[1]);
 			// }
 			map->coords[i][num_values].value = ft_atoi(values[num_values]);
+			// if(i == 19)
+			// {
+			// 	printf("map->coords[%d][%d].value: %d\n", i, num_values, map->coords[i][num_values].value);
+			// }
 			//free_arr2D(val_w_colors);
 			num_values++;
 		}
+		//printf("num_values: %d\n", num_values);
 		i++;
 		free_arr2D(values);
 		free(line);
@@ -103,8 +97,6 @@ void create_map(char *argv, t_data *data, t_color *gradient)
 	if (read_map(open(map_name, O_RDONLY), &data->map) != 0)
 	{
 		free(map_name);
-		//free(gradient);
-		//free(&data->map);
 		printf("WRONG MAP! :(\n");
 		destroy_win_and_img(data);
 	}

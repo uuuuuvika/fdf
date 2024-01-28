@@ -116,7 +116,8 @@ void draw_lines(t_img *img, t_map *map)
 	float ny_next;
 	float nx;
 	float ny;
-
+	printf("num_rows: %d\n", map->num_rows);
+	printf("num_cols: %d\n", map->num_cols);
 	x = 0;
 	while (x < map->num_rows)
 	{

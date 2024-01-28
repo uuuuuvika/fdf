@@ -31,19 +31,22 @@ void cartesian_to_iso(t_map *map)
 	float xx;
 	float yy;
    
-    int off_x = map->num_rows / 2;
-    int off_y = map->num_cols / 2;
+    // int off_x = map->num_rows / 2;
+    // int off_y = map->num_cols / 2;
 	x = 0;
 	while (x < map->num_rows)
 	{
 		y = 0;
 		while (y < map->num_cols)
 		{
+			// if(x == 18)
+			// 	printf("z: %d\n", map->coords[x][y].value);
 			z = map->coords[x][y].value * map->descale_z;
-			// rotate_over_z(xwo(map, x), ywo(map, y), &xx, &yy, map->a_z);
-			// rotate_over_x(yy, z, &yy, map->a_x);
-            xx = (x - off_x) * cos(map->a_z) - (y - off_y) * sin(map->a_z);
-yy = ((x - off_x) * sin(map->a_z) + (y - off_y) * cos(map->a_z)) * cos(map->a_x) - z * sin(map->a_x);
+			rotate_over_z(xwo(map, x), ywo(map, y), &xx, &yy, map->a_z);
+			rotate_over_x(yy, z, &yy, map->a_x);
+
+            //xx = (x - off_x) * cos(map->a_z) - (y - off_y) * sin(map->a_z);
+			//yy = ((x - off_x) * sin(map->a_z) + (y - off_y) * cos(map->a_z)) * cos(map->a_x) - z * sin(map->a_x);
 
             // printf("%f a_z\n", map->a_z);
             // printf("%f a_x\n", map->a_x);

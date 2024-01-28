@@ -105,6 +105,10 @@ void colorize_points(t_map *map)
         j = 0;
         while (j < map->num_cols)
         {
+            // if(i == 19)
+			// {
+			// 	printf("map->coords[%d][%d].value: %d\n", i, j, map->coords[i][j].value);
+			// }
             if (map->coords[i][j].value < min_val)
                 min_val = map->coords[i][j].value;
             if (map->coords[i][j].value > max_val)
@@ -124,6 +128,7 @@ void colorize_points(t_map *map)
                 map->coords[i][j].color = map->gradient[0];
             else
             {
+               
                 float step = (float)(map->coords[i][j].value - min_val) / (max_val - min_val);
                 map->coords[i][j].color.r = map->gradient[0].r + step * (map->gradient[1].r - map->gradient[0].r);
                 map->coords[i][j].color.g = map->gradient[0].g + step * (map->gradient[1].g - map->gradient[0].g);

@@ -49,3 +49,16 @@ int	handle_last_render_vars(t_render_vars *lrv, t_data *data)
 	lrv->last_descale_z = data->map.descale_z;
 	return (0);
 }
+
+void	malloc_for_z(t_map *map) //here are reachable bytes
+{
+	int i;
+
+	map->coords = malloc(sizeof(t_coords *) * map->num_rows);
+	i = 0;
+	while (i < map->num_rows)
+	{
+		map->coords[i] = malloc(sizeof(t_coords) * map->num_cols);
+		i++;
+	}
+}
