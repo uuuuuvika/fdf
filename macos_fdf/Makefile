@@ -2,7 +2,7 @@ NAME	= fdf
 
 CC		= gcc
 RM		= rm -f
-CFLAGS 	= -g -Wall -Wextra  -I/usr/X11/include #-fsanitize=address #-Werror
+CFLAGS 	= -g -Wall -Wextra  -I/usr/X11/include -fsanitize=address #-Werror
 
 GL_SILENCE_DEPRECATION := 1
 LIBFT			= libs/the_libft/libft.a
@@ -10,7 +10,7 @@ MINILIBX_DIR	:= libs/minilibx_macos/
 MINILIBXCC		:= -I mlx -L $(MINILIBX_DIR) -lmlx
 OPENGL			:= -framework OpenGL -framework AppKit
 
-SRC	=	fdf.c	utils_colors.c	user_controls.c	utils_image.c	utils_map.c draw.c utils_free.c _extra.c
+SRC	=	fdf.c	utils_colors.c	user_controls.c	utils_image.c	utils_map.c draw.c utils.c transform_coordinates.c _extra.c
 OBJ	=	$(SRC:%.c=%.o)
 
 all:	makelibs

@@ -24,6 +24,39 @@ void draw_dots(t_img *img, t_map *map)
 	}
 }
 
+// void cartesian_to_iso(t_map *map)
+// {
+// 	int x;
+// 	int y;
+// 	int z;
+// 	float xx;
+// 	float yy;
+// 	int off_x = map->num_rows / 2;
+// 	int off_y = map->num_cols / 2;
+
+// 	x = 0;
+// 	while (x < map->num_rows)
+// 	{
+// 		y = 0;
+// 		while (y < map->num_cols)
+// 		{
+// 			z = map->coords[x][y].value * map->descale_z;
+// 			xx = (x - off_x) * cos(map->a_z) - (y - off_y) * sin(map->a_z);
+// 			yy = ((x - off_x) * sin(map->a_z) + (y - off_y) * cos(map->a_z)) * cos(map->a_x) - z * sin(map->a_x);
+// 			// yy = yy * cos(map->a_x) - z * sin(map->a_x);
+// 			// map->coords[x][y].r = sqrt(xx * xx + yy * yy + z * z);
+
+// 			// printf("x: %d, y: %d, xx: %f, yy: %f\n", x - off_x, y - off_y, xx, yy);
+
+// 			map->coords[x][y].x_iso = xx * map->scale + map->move_x;
+// 			map->coords[x][y].y_iso = yy * map->scale + map->move_y;
+// 			y++;
+// 		}
+// 		x++;
+// 	}
+// }
+
+
 // void cartesian_to_spherical(t_map *map)
 // {
 // 	int x;
@@ -321,6 +354,63 @@ void draw_dots(t_img *img, t_map *map)
 // 		x++;
 // 	}
 // }
+
+void draw_circle(t_img *img, t_map *map)
+{
+	int x;
+	int y;
+	float xx = 0;
+	float yy = 0;
+	
+
+	float	off_x = map->num_rows / 2;
+	float	off_y = map->num_cols / 2;
+
+	x = 0;
+	while (x < map->num_rows)
+	{
+		y = 0;
+		while (y < map->num_cols)
+		{
+			int z = map->coords[x][y].value * map->descale_z;
+
+			int r = sqrt((x - off_x) * (x - off_x) + (y - off_y) * (y - off_y)); //-2 -2  -2 -1  -2 0  -2 1  -2 2 
+			// r = r * 40 + z * 2;
+
+			printf("z: %d, r: %d\n", z, r);
+			//int r2 = 1 * 20;
+
+			// int r3 = sqrt(y * y + x * x ) * 20;
+			// printf("r3: %d\n", r3);
+
+			double theta = atan2(y - off_y, x - off_x);
+			//printf("theta: %f\n", theta);
+
+			// double theta_degrees = theta * (180.0 / M_PI);
+			// printf("theta: %f\n\n", theta_degrees);
+        		
+			xx = r * cos(2 * M_PI * (theta));
+            yy = r * sin(2 * M_PI * (theta));
+			//printf("x: %d, y: %d, xx: %f, yy: %f\n", x, y, xx, yy);
+			
+			//z = r * cos(M_PI * (theta));
+
+			xx = xx * cos(map->a_z) - yy * sin(map->a_z);
+			yy = (xx * sin(map->a_z) + yy * cos(map->a_z)) * cos(map->a_x) * sin(map->a_x);
+
+ 			xx = xx * map->scale + map->move_x;
+			yy = yy * map->scale + map->move_y;
+
+			img_pix_put(img, xx + WIDTH / 2, yy + HEIGHT / 2, PURPLE_PIXEL);
+
+			// xx = r3 * cos(2 * M_PI * (theta));
+            // yy = r3 * sin(2 * M_PI * (theta));
+			// img_pix_put(img, xx + WIDTH / 2, yy + HEIGHT / 2, PURPLE_PIXEL);
+			y++;
+		}
+		x++;
+	}
+}
 
 int ipart(float x) {
     return (int)floor(x);

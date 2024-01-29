@@ -1,10 +1,14 @@
 #include "fdf.h"
 
-// int is_dark(t_color color)
-// {
-//     int brightness = color.r * RED_COEFFICIENT + color.g * GREEN_COEFFICIENT + color.b * BLUE_COEFFICIENT;
-//     return (brightness < DARK_THRESHOLD);
-// }
+int is_contrast(t_color color1, t_color color2)
+{
+    int brightness1;
+    int brightness2;
+
+    brightness1 = color1.r * RED_COEFFICIENT + color1.g * GREEN_COEFFICIENT + color1.b * BLUE_COEFFICIENT; 
+    brightness2 = color2.r * RED_COEFFICIENT + color2.g * GREEN_COEFFICIENT + color2.b * BLUE_COEFFICIENT;
+    return (abs(brightness1 - brightness2) > DARK_THRESHOLD);
+}
 
 t_color *gen_gradient(void)
 {
@@ -13,15 +17,15 @@ t_color *gen_gradient(void)
     t_color *gradients = malloc(2 * sizeof(t_color));
     if (gradients == NULL)
         return NULL;
-    // do
-    // {
+    do
+    {
     gradients[0].r = rand() % 256;
     gradients[0].g = rand() % 256;
     gradients[0].b = rand() % 256;
     gradients[1].r = rand() % 256;
     gradients[1].g = rand() % 256;
     gradients[1].b = rand() % 256;
-    //} while (is_dark(gradients[0]) || is_dark(gradients[1]));
+    } while (!is_contrast(gradients[0], gradients[1]));
     return (gradients);
 }
 
@@ -84,39 +88,21 @@ t_color hex_to_color(char *hex_string)
 
 void colorize_points(t_map *map)
 {
-    int min_val;
-    int max_val;
+    float step;
     int i;
     int j;
 
-    min_val = map->coords[0][0].value;
-    max_val = map->coords[0][0].value;
     i = 0;
     while (i < map->num_rows)
     {
         j = 0;
         while (j < map->num_cols)
         {
-            if (map->coords[i][j].value < min_val)
-                min_val = map->coords[i][j].value;
-            if (map->coords[i][j].value > max_val)
-                max_val = map->coords[i][j].value;
-            j++;
-        }
-        i++;
-    }
-
-    i = 0;
-    while (i < map->num_rows)
-    {
-        j = 0;
-        while (j < map->num_cols)
-        {
-            if (min_val == max_val)
+            if (map->min_val == map->max_val)
                 map->coords[i][j].color = map->gradient[0];
             else
             {
-                float step = (float)(map->coords[i][j].value - min_val) / (max_val - min_val);
+                step = (float)(map->coords[i][j].value - map->min_val) / (map->max_val - map->min_val);
                 map->coords[i][j].color.r = map->gradient[0].r + step * (map->gradient[1].r - map->gradient[0].r);
                 map->coords[i][j].color.g = map->gradient[0].g + step * (map->gradient[1].g - map->gradient[0].g);
                 map->coords[i][j].color.b = map->gradient[0].b + step * (map->gradient[1].b - map->gradient[0].b);

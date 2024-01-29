@@ -40,6 +40,16 @@
 #define KEY_A 0
 #define SPACE 49
 
+typedef struct s_render_vars
+{
+    float last_a_z;
+    float last_a_x;
+    float last_scale;
+    int last_move_x;
+    int last_move_y;
+    int last_descale_z;
+} t_render_vars;
+
 typedef struct s_color
 {
     int r;
@@ -80,6 +90,8 @@ typedef struct s_map
     int move_y;
     t_color *gradient;
     bool has_color;
+    int max_val;
+    int min_val;
 } t_map;
 
 typedef struct s_img
@@ -87,7 +99,7 @@ typedef struct s_img
     void *mlx_img;
     char *addr;
     int bpp;
-    int line_len; //??
+    int line_len;
     int endian;
 } t_img;
 
@@ -118,6 +130,7 @@ int gradient_to_int(t_color *color);
 void colorize_points(t_map *map);
 
 void img_pix_put(t_img *img, int x, int y, int color);
+int	handle_last_render_vars(t_render_vars *lrv, t_data *data);
 
 // map
 int read_map(int fd, t_map *map);
@@ -127,6 +140,7 @@ void free_arr2D(char **arr2D);
 void cartesian_to_iso(t_map *map);
 void create_map(char *argv, t_data *data, t_color *gradient);
 void cartesian_to_spherical(t_map *map);
+void find_extremes(t_map *map);
 
 // draw
 float get_pix_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur);
