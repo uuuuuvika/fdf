@@ -136,11 +136,14 @@ int	handle_last_render_vars(t_render_vars *lrv, t_data *data);
 int read_map(int fd, t_map *map);
 void malloc_for_z(t_map *map);
 void fill_z(int fd, t_map *map);
-void free_arr2D(char **arr2D);
+void free_arr2D(char **arr2D, char *line);
 void cartesian_to_iso(t_map *map);
 void create_map(char *argv, t_data *data, t_color *gradient);
 void cartesian_to_spherical(t_map *map);
 void find_extremes(t_map *map);
+int	read_first_line(int fd, int *num_cols);
+int	read_next_line(int fd, int *num_cols);
+int count_columns(char **cols);
 
 // draw
 float get_pix_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur);

@@ -29,7 +29,7 @@ int destroy_win_and_img(t_data *data)
     exit(0);
 }
 
-void free_arr2D(char **arr2D)
+void free_arr2D(char **arr2D, char	*line)
 {
 	int i;
 
@@ -37,6 +37,7 @@ void free_arr2D(char **arr2D)
 	while (arr2D[i] != NULL && arr2D[i][0] != '\n')
 		free(arr2D[i++]);
 	free(arr2D);
+    free(line);
 }
 
 int handle_last_render_vars(t_render_vars *lrv, t_data *data)

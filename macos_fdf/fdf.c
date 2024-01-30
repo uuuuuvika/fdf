@@ -18,11 +18,9 @@ int	render(t_data *data)
 		data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIDTH, HEIGHT);
 		data->img.addr = mlx_get_data_addr(data->img.mlx_img, &data->img.bpp, 
 			&data->img.line_len, &data->img.endian);
-		cartesian_to_iso(&data->map);
-		//cartesian_to_spherical(&data->map);
-		//draw_dots(&data->img, &data->map);
+		//cartesian_to_iso(&data->map);
+		cartesian_to_spherical(&data->map);
 		draw_lines(&data->img, &data->map);
-		//draw_circle(&data->img, &data->map);
 		handle_last_render_vars(&lrv, data);
 		mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
 	}
@@ -47,26 +45,17 @@ int main(int argc, char **argv)
 	if (data.mlx_ptr == NULL)
 		return (MLX_ERROR);
 
-	data.win_ptr = mlx_new_window(data.mlx_ptr, WIDTH, HEIGHT, "fdf");
+	data.win_ptr = mlx_new_window(data.mlx_ptr, WIDTH, HEIGHT, "🔥");
 
 	if (data.win_ptr == NULL)
-	{
-		//free(data.win_ptr);
 		return (MLX_ERROR);
-	}
 
 	data.img.mlx_img = mlx_new_image(data.mlx_ptr, WIDTH, HEIGHT);
 	data.img.addr = mlx_get_data_addr(data.img.mlx_img, &data.img.bpp, &data.img.line_len, &data.img.endian);
-	//data.map.gradient = gradient;
-
 	create_map(argv[1], &data, gradient);
-	cartesian_to_iso(&data.map);
-	//cartesian_to_spherical(&data.map);
-	//draw_dots(&data.img, &data.map);
+	//cartesian_to_iso(&data.map);
+	cartesian_to_spherical(&data.map);
 	draw_lines(&data.img, &data.map);
-	//draw_circle(&data.img, &data.map);
-
-	//print_gradient(data.map.gradient);
 
 	mlx_loop_hook(data.mlx_ptr, &render, &data);
 	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, &handle_keypress, &data);
