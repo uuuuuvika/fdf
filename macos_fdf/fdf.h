@@ -111,6 +111,7 @@ typedef struct s_data
     int mouse_y;
     t_img img;
     t_map map;
+    char *projection;
 } t_data;
 
 void draw_circle(t_img *img, t_map *map);
@@ -118,6 +119,7 @@ void draw_circle(t_img *img, t_map *map);
 void get_mouse_position(int *x, int *y);
 int handle_mousepress(int button, int x, int y, t_data *data);
 int handle_keypress(int key, t_data *data);
+int	close_window(t_data *data);
 
 void rotate(t_data *data, float increment);
 void translate(t_data *data);
@@ -136,7 +138,7 @@ int	handle_last_render_vars(t_render_vars *lrv, t_data *data);
 int read_map(int fd, t_map *map);
 void malloc_for_z(t_map *map);
 void fill_z(int fd, t_map *map);
-void free_arr2D(char **arr2D, char *line);
+void free_temp_arrays(char **arr2D, char *line);
 void cartesian_to_iso(t_map *map);
 void create_map(char *argv, t_data *data, t_color *gradient);
 void cartesian_to_spherical(t_map *map);

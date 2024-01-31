@@ -1,6 +1,6 @@
 #include "fdf.h"
 
-int init_map(t_map *map, t_color *gradient) // do i need them all?
+int	init_map(t_map *map, t_color *gradient)
 {
 	map->num_rows = 0;
 	map->num_cols = 0;
@@ -37,18 +37,18 @@ int	read_map(int fd, t_map *map)
 		{
 			if (count_columns(cols) != map->num_cols)
 			{
-				free_arr2D(cols, line);
+				free_temp_arrays(cols, line);
 				return (1);
 			}
 		}
-		free_arr2D(cols, line);
+		free_temp_arrays(cols, line);
 		line = get_next_line(fd);
 	}
 	close(fd);
 	return (0);
 }
 
-int count_columns(char **cols)
+int	count_columns(char **cols)
 {
 	int	count;
 
@@ -58,12 +58,12 @@ int count_columns(char **cols)
 	return (count);
 }
 
-void fill_z(int fd, t_map *map)
+void	fill_z(int fd, t_map *map)
 {
-	int i;
-	char *line;
-	char **values;
-	int num_values;
+	int		i;
+	char	*line;
+	char	**values;
+	int		num_values;
 
 	i = 0;
 	while (i < map->num_rows)
@@ -77,7 +77,7 @@ void fill_z(int fd, t_map *map)
 			num_values++;
 		}
 		i++;
-		free_arr2D(values, line);
+		free_temp_arrays(values, line);
 	}
 	close(fd);
 }

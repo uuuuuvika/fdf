@@ -18,8 +18,10 @@ int	render(t_data *data)
 		data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIDTH, HEIGHT);
 		data->img.addr = mlx_get_data_addr(data->img.mlx_img, &data->img.bpp, 
 			&data->img.line_len, &data->img.endian);
-		//cartesian_to_iso(&data->map);
-		cartesian_to_spherical(&data->map);
+		if (strcmp(data->projection, "globe") == 0)
+			cartesian_to_spherical(&data->map);
+		else
+			cartesian_to_iso(&data->map);
 		draw_lines(&data->img, &data->map);
 		handle_last_render_vars(&lrv, data);
 		mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
@@ -29,12 +31,13 @@ int	render(t_data *data)
 
 int main(int argc, char **argv)
 {
-	static t_data data; //???
-	t_color *gradient = gen_gradient();
+	static t_data	data; //???
+	t_color			*gradient;
 
-	if (argc != 2)
+	gradient = gen_gradient();
+	if (argc < 2 || argc > 3)
 	{
-		printf("WRONG MAP OR NO MAP :(\n");
+		printf("__USAGE___\nFor isometric projection: ./fdf <map>\nFor globe projection: ./fdf <map> globe\n");
 		return (MLX_ERROR);
 	}
 	if (gradient == NULL)
@@ -45,21 +48,38 @@ int main(int argc, char **argv)
 	if (data.mlx_ptr == NULL)
 		return (MLX_ERROR);
 
-	data.win_ptr = mlx_new_window(data.mlx_ptr, WIDTH, HEIGHT, "🔥");
+	data.win_ptr = mlx_new_window(data.mlx_ptr, WIDTH, HEIGHT, "FDF");
 
 	if (data.win_ptr == NULL)
 		return (MLX_ERROR);
 
 	data.img.mlx_img = mlx_new_image(data.mlx_ptr, WIDTH, HEIGHT);
 	data.img.addr = mlx_get_data_addr(data.img.mlx_img, &data.img.bpp, &data.img.line_len, &data.img.endian);
+	
 	create_map(argv[1], &data, gradient);
-	//cartesian_to_iso(&data.map);
-	cartesian_to_spherical(&data.map);
+
+	if (argc == 3 && strcmp(argv[2], "globe") == 0)
+	{
+		data.projection = "globe";
+		cartesian_to_spherical(&data.map);
+	}
+	else if (argc == 2)
+	{
+		data.projection = "isometric";
+		cartesian_to_iso(&data.map);
+	}
+	else
+	{
+		printf("Wrong arguments:(\nFor isometric projection: ./fdf <map>\nFor globe projection: ./fdf <map> globe\n");
+		return (MLX_ERROR);
+	}
+
 	draw_lines(&data.img, &data.map);
 
 	mlx_loop_hook(data.mlx_ptr, &render, &data);
 	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, &handle_keypress, &data);
 	mlx_mouse_hook(data.win_ptr, &handle_mousepress, &data);
+	mlx_hook(data.win_ptr, 17, 1L << 17, close_window, &data);
 	mlx_loop(data.mlx_ptr);
 
 	free(gradient);

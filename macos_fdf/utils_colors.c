@@ -12,11 +12,12 @@ int is_contrast(t_color color1, t_color color2)
 
 t_color *gen_gradient(void)
 {
-    srand(time(NULL));
+    t_color *gradients;
 
-    t_color *gradients = malloc(2 * sizeof(t_color));
+    srand(time(NULL));
+    gradients = malloc(2 * sizeof(t_color));
     if (gradients == NULL)
-        return NULL;
+        return (NULL);
     do
     {
     gradients[0].r = rand() % 256;
@@ -29,7 +30,7 @@ t_color *gen_gradient(void)
     return (gradients);
 }
 
-void print_gradient(t_color *gradient)
+void    print_gradient(t_color *gradient)
 {
     if (gradient != NULL)
     {
@@ -40,10 +41,10 @@ void print_gradient(t_color *gradient)
         printf("Failed to generate gradient.\n");
 }
 
-int gradient_to_int(t_color *color)
-{
-    return ((color->r << 16) | (color->g << 8) | color->b);
-}
+// int gradient_to_int(t_color *color)
+// {
+//     return ((color->r << 16) | (color->g << 8) | color->b);
+// }
 
 int hex_char_to_int(char hex_char)
 {
@@ -54,7 +55,7 @@ int hex_char_to_int(char hex_char)
     else if (hex_char >= 'A' && hex_char <= 'F')
         return 10 + (hex_char - 'A');
     else
-        return -1;
+        return (-1);
 }
 
 t_color hex_to_color(char *hex_string)
@@ -86,11 +87,11 @@ t_color hex_to_color(char *hex_string)
     return color;
 }
 
-void colorize_points(t_map *map)
+void    colorize_points(t_map *map)
 {
-    float step;
-    int i;
-    int j;
+    float   step;
+    int     i;
+    int     j;
 
     i = 0;
     while (i < map->num_rows)

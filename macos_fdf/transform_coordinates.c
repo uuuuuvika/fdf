@@ -13,12 +13,12 @@ void	rotate_over_x(float y, int z, float *yy, float angle)
 
 int	xwo(t_map *map, int x)
 {
-    return (x - map->num_rows / 2);
+	return (x - map->num_rows / 2);
 }
 
 int	ywo(t_map *map, int y)
 {
-    return (y - map->num_cols / 2);
+	return (y - map->num_cols / 2);
 }
 
 void cartesian_to_iso(t_map *map)
@@ -61,7 +61,6 @@ void cartesian_to_spherical(t_map *map)
 		while (y < map->num_cols)
 		{
 			int relief = map->coords[x][y].value * map->descale_z;
-
 			float theta = M_PI * x / map->num_rows;	  // Latitude
 			float phi = 2 * M_PI * y / map->num_cols; // Longitude
 

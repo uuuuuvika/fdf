@@ -12,14 +12,13 @@ float get_pix_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur)
 void draw_l(t_img *img, int x1, int y1, int x2, int y2, t_color color1, t_color color2)
 {
 	int x1_start = x1;
-	int y1_start = y1; //
-	// printf("x1: %d, y1: %d, x2: %d, y2: %d\n", x1, y1, x2, y2);
+	int y1_start = y1;
 
-	int dx = abs(x2 - x1);		 // 10, 5 = 5
-	int dy = abs(y2 - y1);		 // 0, -5 = 5
-	int sx = (x1 < x2) ? 1 : -1; // 1
-	int sy = (y1 < y2) ? 1 : -1; // -1
-	int err = dx - dy;			 // 0
+	int dx = abs(x2 - x1);
+	int dy = abs(y2 - y1);
+	int sx = (x1 < x2) ? 1 : -1;
+	int sy = (y1 < y2) ? 1 : -1;
+	int err = dx - dy;
 	int err2;
 	int r, g, b;
 	float position;
@@ -37,16 +36,16 @@ void draw_l(t_img *img, int x1, int y1, int x2, int y2, t_color color1, t_color 
 			img_pix_put(img, x1, y1, color);
 		}
 
-		err2 = 2 * err; // 0
-		if (err2 > -dy) // yes
+		err2 = 2 * err;
+		if (err2 > -dy)
 		{
-			err -= dy; // -5
-			x1 += sx;  // x1 + 1 = 6
+			err -= dy;
+			x1 += sx;
 		}
-		if (err2 < dx) // yes
+		if (err2 < dx)
 		{
-			err += dx; // -5 + 5 = 0
-			y1 += sy;  // y1 -1 = 4
+			err += dx;
+			y1 += sy;
 		}
 	}
 }
