@@ -1,12 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   transform_coordinates.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vika <vika@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/03 03:10:13 by vshcherb          #+#    #+#             */
+/*   Updated: 2024/02/03 03:54:18 by vika             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 
-void	rotate_over_z(int x, int y, float *xx, float *yy, float angle)
+void	rotate_over_z(float x, float y, float *xx, float *yy, float angle)
 {
 	*xx = x * cos(angle) - y * sin(angle);
 	*yy = x * sin(angle) + y * cos(angle);
 }
 
-void	rotate_over_x(float y, int z, float *yy, float angle)
+void	rotate_over_x(float y, float z, float *yy, float angle)
 {
 	*yy = y * cos(angle) + z * sin(angle);
 }
@@ -53,6 +65,7 @@ void cartesian_to_spherical(t_map *map)
 	float xx = 0;
 	float yy = 0;
 	float zz = 0;
+	int relief;
 
 	x = 0;
 	while (x < map->num_rows)
@@ -60,22 +73,14 @@ void cartesian_to_spherical(t_map *map)
 		y = 0;
 		while (y < map->num_cols)
 		{
-			int relief = map->coords[x][y].value * map->descale_z;
-			float theta = M_PI * x / map->num_rows;	  // Latitude
-			float phi = 2 * M_PI * y / map->num_cols; // Longitude
-
-			xx = sin(theta) * cos(phi) * (1 + relief / 6000.0);
-			yy = sin(theta) * sin(phi) * (1 + relief / 6000.0);
-			zz = cos(theta) * (1 + relief / 6000.0);
-
-			// rotation  around z axis
-			float temp_x = xx * cos(map->a_z) - yy * sin(map->a_z);
-			float temp_y = xx * sin(map->a_z) + yy * cos(map->a_z);
-			// rotation around x axis
-			yy = temp_y * cos(map->a_x) + zz * sin(map->a_x);
-
-			map->coords[x][y].x_iso = temp_x * map->scale*100 + map->move_x;
-			map->coords[x][y].y_iso = yy * map->scale*100 + map->move_y;
+			relief = map->coords[x][y].value * map->descale_z;
+			xx = sin(M_PI * x / map->num_rows) * cos(2 * M_PI * y / map->num_cols) * (1 + relief / 6000.0);
+			yy = sin(M_PI * x / map->num_rows) * sin(2 * M_PI * y / map->num_cols) * (1 + relief / 6000.0);
+			zz = cos(M_PI * x / map->num_rows) * (1 + relief / 6000.0);
+			rotate_over_z(xx, yy, &xx, &yy, map->a_z);
+			rotate_over_x(yy, zz, &yy, map->a_x);
+			map->coords[x][y].x_iso = xx * map->scale * 10 + map->move_x;
+			map->coords[x][y].y_iso = yy * map->scale * 10 + map->move_y;
 			y++;
 		}
 		x++;

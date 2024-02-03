@@ -4,10 +4,11 @@ CC		= gcc
 RM		= rm -f
 CFLAGS 	= -g -Wall -Wextra  -I/usr/X11/include -fsanitize=address #-Werror
 
-GL_SILENCE_DEPRECATION := 1
 LIBFT			= libs/the_libft/libft.a
+INCLUDE	 		:= incl/
 MINILIBX_DIR	:= libs/minilibx_macos/
 MINILIBXCC		:= -I mlx -L $(MINILIBX_DIR) -lmlx
+HEADER 			:= -I$(INCLUDE) -I$(MINILIBX_DIR)
 OPENGL			:= -framework OpenGL -framework AppKit
 
 SRC	=	fdf.c	utils_colors.c	user_controls.c	utils_image.c	utils_map.c draw.c utils.c transform_coordinates.c _extra.c
@@ -41,5 +42,8 @@ fclean:		clean
 
 re:			fclean
 			@$(MAKE)
+
+norm:
+			@norminette $(SRC) $(INCLUDE) | grep -v Norme -B1 || true
 
 .PHONY:		all clean fclean re

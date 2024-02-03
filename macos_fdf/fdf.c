@@ -31,21 +31,18 @@ int	render(t_data *data)
 
 int main(int argc, char **argv)
 {
-	static t_data	data; //???
+	static t_data	data;
 	t_color			*gradient;
 
 	gradient = gen_gradient();
-	if (argc < 2 || argc > 3)
+	if (argc < 2 || argc > 3 || (argc == 3 && strcmp(argv[2], "globe") != 0))
 	{
 		printf("__USAGE___\nFor isometric projection: ./fdf <map>\nFor globe projection: ./fdf <map> globe\n");
 		return (MLX_ERROR);
 	}
-	if (gradient == NULL)
-		return (MLX_ERROR);
-
 	data.mlx_ptr = mlx_init();
 
-	if (data.mlx_ptr == NULL)
+	if (data.mlx_ptr == NULL || gradient == NULL)
 		return (MLX_ERROR);
 
 	data.win_ptr = mlx_new_window(data.mlx_ptr, WIDTH, HEIGHT, "FDF");
