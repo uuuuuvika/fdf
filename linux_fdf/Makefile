@@ -5,7 +5,7 @@ LIBFT= libs/the_libft/libft.a
 MLX = -L./libs/minilibx-linux -lmlx -lXext -lX11 -lm
 CC=cc
 
-SRCS = fdf.c	utils_colors.c	user_controls.c	utils_image.c	utils_map.c draw.c utils.c _extra.c transform_coordinates.c
+SRCS = fdf.c	utils_colors.c	control.c	utils_image.c	utils_map.c draw.c	draw_utils.c utils.c transform.c to_3d.c to_3d_utils.c
 OBJS	:= ${SRCS:.c=.o}
 
 RM=rm -rf

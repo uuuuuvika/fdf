@@ -6,11 +6,11 @@
 /*   By: vshcherb <vshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 02:01:14 by vshcherb          #+#    #+#             */
-/*   Updated: 2024/02/03 02:01:21 by vshcherb         ###   ########.fr       */
+/*   Updated: 2024/02/03 16:58:59 by vshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "incl/fdf.h"
 
 int	init_map(t_map *map, t_color *gradient)
 {
@@ -97,6 +97,7 @@ void	fill_z(int fd, t_map *map)
 void	create_map(char *argv, t_data *data, t_color *gradient)
 {
 	char	*map_name;
+	
 
 	map_name = ft_strjoin("maps/", argv);
 	map_name = ft_spec_strjoin(map_name, ".fdf");

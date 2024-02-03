@@ -1,21 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_image.c                                      :+:      :+:    :+:   */
+/*   external_libs.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vshcherb <vshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/03 03:10:34 by vshcherb          #+#    #+#             */
-/*   Updated: 2024/02/03 17:30:21 by vshcherb         ###   ########.fr       */
+/*   Created: 2024/02/03 16:28:15 by vshcherb          #+#    #+#             */
+/*   Updated: 2024/02/03 16:35:44 by vshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "incl/fdf.h"
+#ifndef EXTERNAL_LIBS_H
+# define EXTERNAL_LIBS_H
 
-void	img_pix_put(t_img *img, int x, int y, int color)
-{
-    char    *pixel;
-
-    pixel = img->addr + (y * img->line_len + x * (img->bpp / 8));
-    *(int *)pixel = color;
-}
+# include <math.h>
+# include <time.h>
+# include <X11/X.h>
+# include <X11/keysym.h>
+# include <stdio.h>
+# include <fcntl.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <string.h>
+# include <limits.h>
+# include <stdbool.h>
+# include "../libs/minilibx-linux/mlx.h"
+# include "../libs/the_libft/libft.h"
+#endif

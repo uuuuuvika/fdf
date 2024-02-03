@@ -6,11 +6,11 @@
 /*   By: vshcherb <vshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 03:10:41 by vshcherb          #+#    #+#             */
-/*   Updated: 2024/02/03 03:10:59 by vshcherb         ###   ########.fr       */
+/*   Updated: 2024/02/03 14:56:52 by vshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "incl/fdf.h"
 
 int destroy_win_and_img(t_data *data) 
 {
