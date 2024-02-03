@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_map.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vshcherb <vshcherb@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/03 02:01:14 by vshcherb          #+#    #+#             */
+/*   Updated: 2024/02/03 02:01:21 by vshcherb         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 
 int	init_map(t_map *map, t_color *gradient)
@@ -7,46 +19,55 @@ int	init_map(t_map *map, t_color *gradient)
 	map->coords = NULL;
 	map->move_x = 0;
 	map->move_y = 0;
-	// map->a_z = 0;
-	// map->a_x = 0;
-	map->a_z = -135.00 / 180 * 3.14159;
-	map->a_x = -125.00 / 180 * 3.14159;
-	map->scale = 10.0; 
+	map->min_val = 0;
+	map->max_val = 0;
+	map->a_z = -135.00 / 180 * M_PI;
+	map->a_x = -125.00 / 180 * M_PI;
+	map->scale = 20.0;
 	map->descale_z = 1.0;
 	map->rotation_active = false;
 	map->translate_active = false;
 	map->gradient = gradient;
-	// map->has_color = false;
 	return (0);
 }
 
 int	read_map(int fd, t_map *map)
 {
-	int		num_rows;
-	int		num_cols;
 	char	*line;
 	char	**cols;
 
 	if (fd < 0)
 		return (1);
-	num_rows = 0;
-	while ((line = get_next_line(fd)) != NULL)
+	line = get_next_line(fd);
+	while (line != NULL)
 	{
-		num_rows++;
+		map->num_rows++;
 		cols = ft_split(line, ' ');
-		num_cols = 0;
-		while (cols[num_cols] != NULL && cols[num_cols][0] != '\n')
-			num_cols++;
-		free_arr2D(cols);
-		free(line);
+		if (map->num_rows == 1)
+			map->num_cols = count_columns(cols);
+		else
+		{
+			if (count_columns(cols) != map->num_cols)
+			{
+				free_temp_arrays(cols, line);
+				return (1);
+			}
+		}
+		free_temp_arrays(cols, line);
+		line = get_next_line(fd);
 	}
-	map->num_cols = num_cols;
-	map->num_rows = num_rows;
-	// printf("num_rows: %d\n", num_rows);
-	// printf("num_cols: %d\n", num_cols);
-	malloc_for_z(map);
 	close(fd);
 	return (0);
+}
+
+int	count_columns(char **cols)
+{
+	int	count;
+
+	count = 0;
+	while (cols[count] != NULL && cols[count][0] != '\n')
+		count++;
+	return (count);
 }
 
 void	fill_z(int fd, t_map *map)
@@ -55,7 +76,6 @@ void	fill_z(int fd, t_map *map)
 	char	*line;
 	char	**values;
 	int		num_values;
-	//char	**val_w_colors; 
 
 	i = 0;
 	while (i < map->num_rows)
@@ -65,31 +85,18 @@ void	fill_z(int fd, t_map *map)
 		num_values = 0;
 		while (values[num_values] != NULL && values[num_values][0] != '\n')
 		{
-			//val_w_colors = ft_split(values[num_values], ',');
-			// if (val_w_colors[1] != NULL)
-			// {
-			// 	map->has_color = true;
-			// 	map->coords[i][num_values].color = hex_to_color(val_w_colors[1]);
-			// }
 			map->coords[i][num_values].value = ft_atoi(values[num_values]);
-			// if(i == 19)
-			// {
-			// 	printf("map->coords[%d][%d].value: %d\n", i, num_values, map->coords[i][num_values].value);
-			// }
-			//free_arr2D(val_w_colors);
 			num_values++;
 		}
-		//printf("num_values: %d\n", num_values);
 		i++;
-		free_arr2D(values);
-		free(line);
+		free_temp_arrays(values, line);
 	}
 	close(fd);
 }
 
-void create_map(char *argv, t_data *data, t_color *gradient)
+void	create_map(char *argv, t_data *data, t_color *gradient)
 {
-	char *map_name;
+	char	*map_name;
 
 	map_name = ft_strjoin("maps/", argv);
 	map_name = ft_spec_strjoin(map_name, ".fdf");
@@ -100,8 +107,11 @@ void create_map(char *argv, t_data *data, t_color *gradient)
 		printf("WRONG MAP! :(\n");
 		destroy_win_and_img(data);
 	}
+	malloc_for_z(&data->map);
 	fill_z(open(map_name, O_RDONLY), &data->map);
-	// if (data->map.has_color == false)
+	find_extremes(&data->map);
+	if (abs(data->map.min_val - data->map.max_val) > 40)
+		data->map.descale_z = 0.1;
 	colorize_points(&data->map);
 	free(map_name);
 }

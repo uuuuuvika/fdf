@@ -17,7 +17,6 @@
 #define WIDTH 1100
 #define HEIGHT 800
 
-
 #define RED_COEFFICIENT 0.2126
 #define GREEN_COEFFICIENT 0.7152
 #define BLUE_COEFFICIENT 0.0722
@@ -27,6 +26,29 @@
 #define GREEN_PIXEL 0xFF00
 #define PURPLE_PIXEL 0xFF00FF
 #define MLX_ERROR 1
+
+typedef struct s_draw_vars
+{
+    int x1_start;
+    int y1_start;
+    int dx;
+    int dy;
+    int sx;
+    int sy;
+    int err;
+    int err2;
+    
+} t_draw_vars;
+
+typedef struct s_draw_lines_vars
+{
+    float x;
+    float y;
+    float x_nxt;
+    float y_nxt;
+    t_color clr;
+    t_color clr_nxt;
+} t_draw_lines_vars;
 
 typedef struct s_render_vars
 {
@@ -60,17 +82,16 @@ typedef struct s_map
     float a_z;
     float a_x;
     t_coords **coords;
-    float descale_z;
     float scale;
+    float descale_z;
     bool rotation_active;
     bool translate_active;
     int move_x;
     int move_y;
     t_color *gradient;
-    // bool has_color;
-    int offset_x;
-    int offset_y;
-
+    bool has_color;
+    int max_val;
+    int min_val;
 } t_map;
 
 typedef struct s_img
@@ -78,7 +99,7 @@ typedef struct s_img
     void *mlx_img;
     char *addr;
     int bpp;
-    int line_len; //??
+    int line_len;
     int endian;
 } t_img;
 
@@ -90,10 +111,13 @@ typedef struct s_data
     int mouse_y;
     t_img img;
     t_map map;
+    char *projection;
 } t_data;
+
 
 int handle_keypress(int key, t_data *data);
 int handle_mouse(int button, int x, int y, t_data *data);
+int close_window(t_data *data);
 
 void rotate(t_data *data, float increment);
 void translate(t_data *data);
@@ -106,6 +130,7 @@ t_color *gen_gradient(void);
 void print_gradient(t_color *gradient);
 int gradient_to_int(t_color *color);
 void colorize_points(t_map *map);
+void find_extremes(t_map *map);
 
 void img_pix_put(t_img *img, int x, int y, int color);
 
@@ -113,10 +138,11 @@ void img_pix_put(t_img *img, int x, int y, int color);
 int read_map(int fd, t_map *map);
 void malloc_for_z(t_map *map);
 void fill_z(int fd, t_map *map);
-void free_arr2D(char **arr2D);
+void free_temp_arrays(char **arr2D, char *line);
 void cartesian_to_iso(t_map *map);
 void create_map(char *argv, t_data *data, t_color *gradient);
 void cartesian_to_spherical(t_map *map);
+int count_columns(char **cols);
 
 // draw
 float get_pix_position(int x1, int x2, int y1, int y2, int x_cur, int y_cur);
