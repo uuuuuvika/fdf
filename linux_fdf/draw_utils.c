@@ -6,7 +6,7 @@
 /*   By: vshcherb <vshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 15:12:25 by vshcherb          #+#    #+#             */
-/*   Updated: 2024/02/03 15:19:35 by vshcherb         ###   ########.fr       */
+/*   Updated: 2024/02/04 19:14:44 by vshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ float	get_pix_position(t_vector_vars vv, int x_cur, int y_cur)
 	return (1.0);
 }
 
-int	get_clr(t_color clr_1, t_color clr_2, float position)
+int	get_clr(t_clr clr_1, t_clr clr_2, float position)
 {
 	int	r;
 	int	g;

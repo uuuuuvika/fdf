@@ -6,28 +6,20 @@
 /*   By: vshcherb <vshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 02:01:14 by vshcherb          #+#    #+#             */
-/*   Updated: 2024/02/03 16:58:59 by vshcherb         ###   ########.fr       */
+/*   Updated: 2024/02/05 00:17:44 by vshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "incl/fdf.h"
 
-int	init_map(t_map *map, t_color *gradient)
+int	init_map(t_map *map)
 {
-	map->num_rows = 0;
-	map->num_cols = 0;
-	map->coords = NULL;
-	map->move_x = 0;
-	map->move_y = 0;
-	map->min_val = 0;
-	map->max_val = 0;
 	map->a_z = -135.00 / 180 * M_PI;
 	map->a_x = -125.00 / 180 * M_PI;
 	map->scale = 20.0;
 	map->descale_z = 1.0;
 	map->rotation_active = false;
 	map->translate_active = false;
-	map->gradient = gradient;
 	return (0);
 }
 
@@ -94,25 +86,24 @@ void	fill_z(int fd, t_map *map)
 	close(fd);
 }
 
-void	create_map(char *argv, t_data *data, t_color *gradient)
+void	create_map(char *argv, t_data *data)
 {
 	char	*map_name;
-	
 
 	map_name = ft_strjoin("maps/", argv);
-	map_name = ft_spec_strjoin(map_name, ".fdf");
-	init_map(&data->map, gradient);
+	init_map(&data->map);
 	if (read_map(open(map_name, O_RDONLY), &data->map) != 0)
 	{
 		free(map_name);
-		printf("WRONG MAP! :(\n");
+		ft_printf(RED"WRONG MAP! :(\n"WHITE);
 		destroy_win_and_img(data);
 	}
 	malloc_for_z(&data->map);
+	data->map.gr = gen_gr();
 	fill_z(open(map_name, O_RDONLY), &data->map);
 	find_extremes(&data->map);
 	if (abs(data->map.min_val - data->map.max_val) > 40)
 		data->map.descale_z = 0.1;
-	colorize_points(&data->map);
+	clrize_points(&data->map);
 	free(map_name);
 }

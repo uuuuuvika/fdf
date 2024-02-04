@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   transform_to_3d.c                                  :+:      :+:    :+:   */
+/*   to_3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vshcherb <vshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 03:10:13 by vshcherb          #+#    #+#             */
-/*   Updated: 2024/02/03 17:04:11 by vshcherb         ###   ########.fr       */
+/*   Updated: 2024/02/05 00:15:02 by vshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,12 @@ void	cartesian_to_spherical(t_map *map)
 		y = 0;
 		while (y < map->num_cols)
 		{
-			tv.relief = map->coords[x][y].value * map->descale_z;
-			tv.xx = sin(M_PI * x / map->num_rows) * 
-				cos(2 * M_PI * y / map->num_cols) * so(tv.relief);
-			tv.yy = sin(M_PI * x / map->num_rows) 
-				* sin(2 * M_PI * y / map->num_cols) * so(tv.relief);
+			tv.relief = map->coords[x][y].value * map->descale_z * 6;
+			clrise_globe(map, x, y, tv.relief);
+			tv.xx = sin(M_PI * x / map->num_rows) * \
+					cos(2 * M_PI * y / map->num_cols) * so(tv.relief);
+			tv.yy = sin(M_PI * x / map->num_rows) * \
+					sin(2 * M_PI * y / map->num_cols) * so(tv.relief);
 			tv.zz = cos(M_PI * x / map->num_rows) * so(tv.relief);
 			rotate_over_z(tv.xx, tv.yy, &tv, map->a_z);
 			rotate_over_x(tv.yy, tv.zz, &tv.yy, map->a_x);

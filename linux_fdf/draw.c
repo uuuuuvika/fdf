@@ -6,7 +6,7 @@
 /*   By: vshcherb <vshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 14:37:56 by vshcherb          #+#    #+#             */
-/*   Updated: 2024/02/03 15:29:51 by vshcherb         ###   ########.fr       */
+/*   Updated: 2024/02/04 19:14:44 by vshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,12 @@ void	draw_horisontal_lines(t_img *img, t_map *map)
 		{
 			dl.x = map->coords[x][y].x_iso + WIDTH / 2;
 			dl.y = map->coords[x][y].y_iso + HEIGHT / 2;
-			dl.clr = map->coords[x][y].color;
+			dl.clr = map->coords[x][y].clr;
 			if (x < map->num_rows - 1)
 			{
 				dl.x_nxt = map->coords[x + 1][y].x_iso + WIDTH / 2;
 				dl.y_nxt = map->coords[x + 1][y].y_iso + HEIGHT / 2;
-				dl.clr_nxt = map->coords[x + 1][y].color;
+				dl.clr_nxt = map->coords[x + 1][y].clr;
 				draw_line(img, dl);
 			}
 			y++;
@@ -81,12 +81,12 @@ void	draw_vertical_lines(t_img *img, t_map *map)
 		{
 			dl.x = map->coords[x][y].x_iso + WIDTH / 2;
 			dl.y = map->coords[x][y].y_iso + HEIGHT / 2;
-			dl.clr = map->coords[x][y].color;
+			dl.clr = map->coords[x][y].clr;
 			if (y < map->num_cols - 1)
 			{
 				dl.x_nxt = map->coords[x][y + 1].x_iso + WIDTH / 2;
 				dl.y_nxt = map->coords[x][y + 1].y_iso + HEIGHT / 2;
-				dl.clr_nxt = map->coords[x][y + 1].color;
+				dl.clr_nxt = map->coords[x][y + 1].clr;
 				draw_line(img, dl);
 			}
 			y++;

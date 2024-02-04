@@ -1,21 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_image.c                                      :+:      :+:    :+:   */
+/*   ft_putnbr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vshcherb <vshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/03 03:10:34 by vshcherb          #+#    #+#             */
-/*   Updated: 2024/02/03 17:30:21 by vshcherb         ###   ########.fr       */
+/*   Created: 2023/06/11 16:17:02 by vshcherb          #+#    #+#             */
+/*   Updated: 2023/06/13 15:13:05 by vshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "incl/fdf.h"
+#include "ft_printf.h"
 
-void	img_pix_put(t_img *img, int x, int y, int color)
+int	ft_putnbr(int n)
 {
-    char    *pixel;
+	int	len;
 
-    pixel = img->addr + (y * img->line_len + x * (img->bpp / 8));
-    *(int *)pixel = color;
+	len = 0;
+	if (n == -2147483648)
+		return (ft_putstr("-2147483648"));
+	if (n < 0)
+	{
+		len += ft_putstr("-");
+		n *= -1;
+	}
+	if (n >= 10)
+	{
+		len += ft_putnbr(n / 10);
+		len += ft_putnbr(n % 10);
+	}
+	if (n < 10)
+		len += ft_putchar(n + '0');
+	return (len);
 }

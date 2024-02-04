@@ -1,48 +1,51 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vshcherb <vshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 03:10:41 by vshcherb          #+#    #+#             */
-/*   Updated: 2024/02/03 14:56:52 by vshcherb         ###   ########.fr       */
+/*   Updated: 2024/02/04 23:15:35 by vshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "incl/fdf.h"
 
-int destroy_win_and_img(t_data *data) 
+int	destroy_img(t_data *data)
 {
-    if (data->img.mlx_img != NULL)
-    {
-        mlx_destroy_image(data->mlx_ptr, data->img.mlx_img);
-        data->img.mlx_img = NULL;
-    }
-    if (data->win_ptr != NULL)
-    {
-        mlx_destroy_window(data->mlx_ptr, data->win_ptr);
-        data->win_ptr = NULL;
-    }
-    if (data->mlx_ptr != NULL)
-    {
-        mlx_destroy_display(data->mlx_ptr);
-        free(data->mlx_ptr);
-        data->mlx_ptr = NULL;
-    }
-    if (data->map.coords != NULL)
-    {
-        while(data->map.num_rows--)
-            free(data->map.coords[data->map.num_rows]);
-        free(data->map.coords);
-        data->map.coords = NULL;  
-    }
-    if (data->map.gradient != NULL)
-    {
-        free(data->map.gradient);
-        data->map.gradient = NULL;
-    }
-    exit(0);
+	if (data->img.mlx_img != NULL)
+	{
+		mlx_destroy_image(data->mlx_ptr, data->img.mlx_img);
+		data->img.mlx_img = NULL;
+	}
+	return (0);
+}
+
+int	destroy_win_and_img(t_data *data)
+{
+	destroy_img(data);
+	if (data->win_ptr != NULL)
+	{
+		mlx_destroy_window(data->mlx_ptr, data->win_ptr);
+		data->win_ptr = NULL;
+	}
+	if (data->mlx_ptr != NULL)
+	{
+		mlx_destroy_display(data->mlx_ptr);
+		free(data->mlx_ptr);
+		data->mlx_ptr = NULL;
+	}
+	if (data->map.coords != NULL)
+	{
+		while (data->map.num_rows--)
+			free(data->map.coords[data->map.num_rows]);
+		free(data->map.coords);
+		data->map.coords = NULL;
+	}
+	if (data->map.gr)
+		free(data->map.gr);
+	exit(0);
 }
 
 void	free_temp_arrays(char **arr2D, char *line)
@@ -50,7 +53,7 @@ void	free_temp_arrays(char **arr2D, char *line)
 	int	i;
 
 	i = 0;
-	while (arr2D[i] != NULL && arr2D[i][0] != '\n')
+	while (arr2D[i] != NULL)
 		free(arr2D[i++]);
 	free(arr2D);
 	free(line);
@@ -78,31 +81,4 @@ void	malloc_for_z(t_map *map)
 		map->coords[i] = malloc(sizeof(t_coords) * map->num_cols);
 		i++;
 	}
-}
-
-void	find_extremes(t_map *map)
-{
-	int	min_val;
-	int	max_val;
-	int	i;
-	int	j;
-
-	min_val = map->coords[0][0].value;
-	max_val = map->coords[0][0].value;
-	i = 0;
-	while (i < map->num_rows)
-	{
-		j = 0;
-		while (j < map->num_cols)
-		{
-			if (map->coords[i][j].value < min_val)
-				min_val = map->coords[i][j].value;
-			if (map->coords[i][j].value > max_val)
-				max_val = map->coords[i][j].value;
-			j++;
-		}
-		i++;
-	}
-	map->min_val = min_val;
-	map->max_val = max_val;
 }

@@ -6,7 +6,7 @@
 /*   By: vshcherb <vshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 16:28:09 by vshcherb          #+#    #+#             */
-/*   Updated: 2024/02/03 16:46:31 by vshcherb         ###   ########.fr       */
+/*   Updated: 2024/02/05 00:20:44 by vshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,17 @@
 # define CYAN				"\033[0;96m"
 # define WHITE				"\033[0;97m"
 
-# define MSG "Usage: ./fdf <map>\nFor isometric projection: ./fdf <map>\nFor globe projection: ./fdf <map> globe\n"
+# define MSG "Usage:\nFor isometric projection: \
+./fdf <map>\nFor globe projection: ./fdf <map> globe\n"
 
-typedef struct s_color
+# include <stdbool.h>
+
+typedef struct s_clr
 {
 	int	r;
 	int	g;
 	int	b;
-}	t_color;
+}	t_clr;
 
 typedef struct s_render_vars
 {
@@ -76,8 +79,8 @@ typedef struct s_vector_vars
 	int		y;
 	int		x_nxt;
 	int		y_nxt;
-	t_color	clr;
-	t_color	clr_nxt;
+	t_clr	clr;
+	t_clr	clr_nxt;
 }	t_vector_vars;
 
 typedef struct s_coords
@@ -85,7 +88,7 @@ typedef struct s_coords
 	int		value;
 	float	x_iso;
 	float	y_iso;
-	t_color	color;
+	t_clr	clr;
 	float	r;
 	float	theta;
 	float	phi;
@@ -112,7 +115,7 @@ typedef struct s_map
 	bool		translate_active;
 	int			move_x;
 	int			move_y;
-	t_color		*gradient;
+	t_clr		*gr;
 	int			max_val;
 	int			min_val;
 }	t_map;

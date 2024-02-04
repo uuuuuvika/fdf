@@ -1,30 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   external_libs.h                                    :+:      :+:    :+:   */
+/*   image.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vshcherb <vshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/03 16:28:15 by vshcherb          #+#    #+#             */
-/*   Updated: 2024/02/04 23:49:46 by vshcherb         ###   ########.fr       */
+/*   Created: 2024/02/03 03:10:34 by vshcherb          #+#    #+#             */
+/*   Updated: 2024/02/04 20:42:19 by vshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXTERNAL_LIBS_H
-# define EXTERNAL_LIBS_H
+#include "incl/fdf.h"
 
-# include <math.h>
-# include <time.h>
-# include <X11/X.h>
-# include <X11/keysym.h>
-# include <stdio.h>
-# include <fcntl.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <string.h>
-# include <limits.h>
-# include <stdbool.h>
-# include "../libs/minilibx-linux/mlx.h"
-# include "../libs/the_libft/libft.h"
-# include "../libs/ft_printf/ft_printf.h"
-#endif
+void	img_pix_put(t_img *img, int x, int y, int clr)
+{
+	char	*pixel;
+
+	pixel = img->addr + (y * img->line_len + x * (img->bpp / 8));
+	*(int *)pixel = clr;
+}

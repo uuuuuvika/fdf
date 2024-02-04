@@ -1,30 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   external_libs.h                                    :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vshcherb <vshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/03 16:28:15 by vshcherb          #+#    #+#             */
-/*   Updated: 2024/02/04 23:49:46 by vshcherb         ###   ########.fr       */
+/*   Created: 2024/02/04 17:57:59 by vshcherb          #+#    #+#             */
+/*   Updated: 2024/02/04 18:01:41 by vshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXTERNAL_LIBS_H
-# define EXTERNAL_LIBS_H
+#include "libft.h"
 
-# include <math.h>
-# include <time.h>
-# include <X11/X.h>
-# include <X11/keysym.h>
-# include <stdio.h>
-# include <fcntl.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <string.h>
-# include <limits.h>
-# include <stdbool.h>
-# include "../libs/minilibx-linux/mlx.h"
-# include "../libs/the_libft/libft.h"
-# include "../libs/ft_printf/ft_printf.h"
-#endif
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	size_t	i;
+	size_t	n;
+
+	if (!s1 || !s2)
+		return (-1);
+	n = ft_strlen(s1);
+	i = 0;
+	while ((s1[i] != '\0' || s2[i] != '\0') && i < n)
+	{
+		if (s1[i] != s2[i])
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		i++;
+	}
+	return (0);
+}
