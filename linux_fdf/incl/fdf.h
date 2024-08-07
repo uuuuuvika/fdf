@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vshcherb <vshcherb@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vika <vika@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 16:28:21 by vshcherb          #+#    #+#             */
-/*   Updated: 2024/02/04 23:58:35 by vshcherb         ###   ########.fr       */
+/*   Updated: 2024/08/08 00:51:38 by vika             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,6 @@ int		project_and_draw(int argc, char **argv, t_data *data);
 int		mlx_init_data(t_data *data);
 
 int		destroy_win_and_img(t_data *data);
+void    get_mouse_position(int *x, int *y);
 
 #endif

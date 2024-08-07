@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   transform.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vshcherb <vshcherb@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vika <vika@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 17:11:14 by vshcherb          #+#    #+#             */
-/*   Updated: 2024/02/03 17:17:03 by vshcherb         ###   ########.fr       */
+/*   Updated: 2024/08/08 00:48:59 by vika             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ void	rotate(t_data *data, float increment)
 		return ;
 	data->mouse_x = g_mouse_x;
 	data->mouse_y = g_mouse_y;
-	mlx_mouse_get_pos(data->mlx_ptr, data->win_ptr, &g_mouse_x, &g_mouse_y);
+	//mlx_mouse_get_pos(data->mlx_ptr, data->win_ptr, &g_mouse_x, &g_mouse_y);
+	get_mouse_position(&g_mouse_x, &g_mouse_y);
 	update_rotation(&data->map.a_z, data->mouse_x, g_mouse_x, increment);
 	update_rotation(&data->map.a_x, data->mouse_y, g_mouse_y, increment);
 	data->mouse_x = g_mouse_x;
@@ -48,7 +49,8 @@ void	translate(t_data *data)
 {
 	if (!data->map.translate_active)
 		return ;
-	mlx_mouse_get_pos(data->mlx_ptr, data->win_ptr, &g_mouse_x, &g_mouse_y);
+	//mlx_mouse_get_pos(data->mlx_ptr, data->win_ptr, &g_mouse_x, &g_mouse_y);
+	get_mouse_position(&g_mouse_x, &g_mouse_y);
 	update_translation(&data->map.move_x, data->mouse_x, g_mouse_x);
 	update_translation(&data->map.move_y, data->mouse_y, g_mouse_y);
 	data->mouse_x = g_mouse_x;
