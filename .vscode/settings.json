@@ -59,6 +59,7 @@
   "files.associations": {
     "cmath": "c",
     "__tuple": "c",
-    "array": "c"
+    "array": "c",
+    "unistd.h": "c"
   }
 }
