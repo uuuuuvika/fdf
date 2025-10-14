@@ -17,6 +17,7 @@
 # include <time.h>
 # include <X11/X.h>
 # include <X11/keysym.h>
+# include <CoreGraphics/CoreGraphics.h>
 # include <stdio.h>
 # include <fcntl.h>
 # include <unistd.h>
@@ -24,7 +25,7 @@
 # include <string.h>
 # include <limits.h>
 # include <stdbool.h>
-# include "../libs/minilibx-linux/mlx.h"
+# include "../libs/minilibx_macos/mlx.h"
 # include "../libs/the_libft/libft.h"
 # include "../libs/ft_printf/ft_printf.h"
 #endif

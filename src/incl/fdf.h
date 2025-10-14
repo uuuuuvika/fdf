@@ -18,6 +18,7 @@
 # include "keycodes.h"
 
 int		handle_mouse(int button, int x, int y, t_data *data);
+void	get_mouse_position(int *x, int *y);
 int		handle_keypress(int key, t_data *data);
 int		close_window(t_data *data);
 void	rotate(t_data *data, float increment);

@@ -57,9 +57,19 @@
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
+    "*.cps": "javascript",
+    "stdio.h": "c",
+    "magickwand.h": "c",
+    "magick-image.h": "c",
+    "*.pages": "yaml",
+    "main.h": "c",
     "cmath": "c",
     "__tuple": "c",
     "array": "c",
-    "unistd.h": "c"
+    "unistd.h": "c",
+    "fdf.h": "c",
+    "external_libs.h": "c",
+    "libft.h": "c",
+    "x.h": "c"
   }
 }

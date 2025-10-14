@@ -35,6 +35,15 @@ int	close_window(t_data *data)
 	return (0);
 }
 
+void get_mouse_position(int *x, int *y)
+{
+	CGEventRef event = CGEventCreate(NULL);
+	CGPoint mouseLoc = CGEventGetLocation(event);
+	*x = (int)mouseLoc.x;
+	*y = (int)mouseLoc.y;
+	CFRelease(event);
+}
+
 int	handle_mouse(int button, int x, int y, t_data *data)
 {
 	(void)x;
@@ -42,8 +51,7 @@ int	handle_mouse(int button, int x, int y, t_data *data)
 	if (button == 1)
 	{
 		data->map.translate_active = !data->map.translate_active;
-		mlx_mouse_get_pos(data->mlx_ptr, data->win_ptr,
-			&data->mouse_x, &data->mouse_y);
+		get_mouse_position(&data->mouse_x, &data->mouse_y);
 	}
 	return (0);
 }

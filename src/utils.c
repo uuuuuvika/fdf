@@ -32,7 +32,7 @@ int	destroy_win_and_img(t_data *data)
 	}
 	if (data->mlx_ptr != NULL)
 	{
-		mlx_destroy_display(data->mlx_ptr);
+		//mlx_destroy_display(data->mlx_ptr);
 		free(data->mlx_ptr);
 		data->mlx_ptr = NULL;
 	}
