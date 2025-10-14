@@ -12,19 +12,21 @@
 
 #include "incl/fdf.h"
 
-int	handle_keypress(int keysym, t_data *data)
+int handle_keypress(int key, t_data *data)
 {
-	if (keysym == XK_Escape)
+	if (key == KEY_ESC)
 		destroy_win_and_img(data);
-	if (keysym == XK_Up)
-		data->map.scale += 1.5;
-	if (keysym == XK_Down)
-		data->map.scale -= 1.5;
-	if (keysym == XK_space)
+	if (key == KEY_UP)
+		data->map.scale += 0.5;
+	if (key == KEY_DOWN)
+		data->map.scale -= 0.5;
+	if (key == SPACE)
 		data->map.rotation_active = !data->map.rotation_active;
-	if (keysym == XK_d)
+	if (key == KEY_A)
+		data->map.translate_active = !data->map.translate_active;
+	if (key == KEY_D)
 		data->map.descale_z -= 0.01;
-	if (keysym == XK_s)
+	if (key == KEY_S)
 		data->map.descale_z += 0.01;
 	return (0);
 }
